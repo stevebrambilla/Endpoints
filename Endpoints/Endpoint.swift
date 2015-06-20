@@ -9,6 +9,9 @@
 import Foundation
 import ReactiveCocoa
 
+// ----------------------------------------------------------------------------
+// MARK: - Endpoint
+
 /// Endpoints are used to create one-way bindings from `SignalProducer`s to
 /// object properties, typically for binding data to views.
 ///
@@ -51,7 +54,8 @@ public struct Endpoint<Value> {
 	}
 }
 
-
+// ----------------------------------------------------------------------------
+// MARK: - Binding Operator
 
 /// Binds `producer` to `endpoint` and returns a Disposable that can be used
 /// to cancel the binding.

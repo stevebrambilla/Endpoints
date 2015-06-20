@@ -12,16 +12,26 @@ import Endpoints
 import ReactiveCocoa
 
 class EndpointsTests: XCTestCase {
+	var disposable: CompositeDisposable!
+
+	override func setUp() {
+		disposable = CompositeDisposable()
+	}
+
+	override func tearDown() {
+		disposable.dispose()
+	}
+
     func testBindingWithMethod() {
 		let producer = SignalProducer<String, NoError>(value: "Bound!")
 		let target = EndpointTarget()
-		target.textEndpoint.bind(producer)
+		disposable += target.textEndpoint.bind(producer)
 		XCTAssert(target.text == "Bound!")
     }
 
 	func testBindingWithOperator() {
 		let target = EndpointTarget()
-		target.textEndpoint <~ SignalProducer<String, NoError>(value: "Bound!")
+		disposable += target.textEndpoint <~ SignalProducer<String, NoError>(value: "Bound!")
 		XCTAssert(target.text == "Bound!")
 	}
 
@@ -29,19 +39,19 @@ class EndpointsTests: XCTestCase {
 		let (producer, observer) = SignalProducer<String, NoError>.buffer()
 
 		let target = EndpointTarget()
-		let disposable = target.textEndpoint <~ producer
+		let textDisposable = target.textEndpoint <~ producer
 		XCTAssert(target.text == "")
 
 		sendNext(observer, "first")
 		XCTAssert(target.text == "first")
 
-		disposable.dispose()
+		textDisposable.dispose()
 
 		sendNext(observer, "second")
 		XCTAssert(target.text == "first")
 	}
 
-	func testShortCircuiting() {
+	func testDisposesOnZeroedTarget() {
 		let addedDisposable = SimpleDisposable()
 		var sink: Signal<String, NoError>.Observer!
 

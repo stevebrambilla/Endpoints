@@ -12,6 +12,16 @@ import Endpoints
 import ReactiveCocoa
 
 class ExecutorTests: XCTestCase {
+	var disposable: CompositeDisposable!
+
+	override func setUp() {
+		disposable = CompositeDisposable()
+	}
+
+	override func tearDown() {
+		disposable.dispose()
+	}
+
 	func testDirectBindingWithMethod() {
 		let source = ExecutorSource()
 
@@ -22,7 +32,7 @@ class ExecutorTests: XCTestCase {
 		var count = 0
 		action.values.observe(next: { _ in count++ })
 
-		source.executor.bind(action)
+		disposable += source.executor.bind(action)
 		XCTAssert(count == 0)
 
 		source.trigger()
@@ -42,7 +52,7 @@ class ExecutorTests: XCTestCase {
 		var last = "--"
 		action.values.observe(next: { last = $0 })
 
-		source.executor.bind(action) { x in "\(x)" }
+		disposable += source.executor.bind(action) { x in String(x) }
 		XCTAssert(last == "--")
 
 		source.trigger()
@@ -59,7 +69,7 @@ class ExecutorTests: XCTestCase {
 		var count = 0
 		action.values.observe(next: { _ in count++ })
 
-		source.executor <~ action
+		disposable += source.executor <~ action
 		XCTAssert(count == 0)
 
 		source.trigger()
@@ -77,7 +87,7 @@ class ExecutorTests: XCTestCase {
 			return producer
 		}
 
-		source.executor <~ action
+		disposable += source.executor <~ action
 		XCTAssert(source.enabled == true)
 
 		source.trigger()
@@ -97,15 +107,49 @@ class ExecutorTests: XCTestCase {
 		var count = 0
 		action.values.observe(next: { _ in count++ })
 
-		let disposable = source.executor <~ action
+		let actionDisposable = source.executor <~ action
 		XCTAssert(count == 0)
 
 		source.trigger()
 		XCTAssert(count == 1)
 
-		disposable.dispose()
+		actionDisposable.dispose()
 
 		source.trigger()
 		XCTAssert(count == 1)
+	}
+
+	func testIgnoringInputAdaptor() {
+		let source = ExecutorSource()
+
+		let action = Action<(), String, NoError> { x in
+			return SignalProducer(value: "Done")
+		}
+
+		var last = "--"
+		action.values.observe(next: { last = $0 })
+
+		disposable += source.executor <~ action |> ignoreInput
+		XCTAssert(last == "--")
+
+		source.trigger()
+		XCTAssert(last == "Done")
+	}
+
+	func testTransformingInputAdaptor() {
+		let source = ExecutorSource()
+
+		let action = Action<String, String, NoError> { x in
+			return SignalProducer(value: x)
+		}
+
+		var last = "--"
+		action.values.observe(next: { last = $0 })
+
+		disposable += source.executor <~ action |> mapInput { String($0) }
+		XCTAssert(last == "--")
+
+		source.trigger()
+		XCTAssert(last == "0")
 	}
 }
