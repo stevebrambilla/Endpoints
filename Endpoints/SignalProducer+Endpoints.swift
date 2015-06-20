@@ -15,7 +15,7 @@ import ReactiveCocoa
 ///
 /// This can be used in conjunction with Endpoints that accept a tuple with an
 /// animated flag as the second parameter to avoid animating initial values.
-func animateFollowingFirst<T, E>(producer: SignalProducer<T, E>) -> SignalProducer<(T, Bool), E> {
+public func animateFollowingFirst<T, E>(producer: SignalProducer<T, E>) -> SignalProducer<(T, Bool), E> {
 	var first = true
 	return producer |> map { value in
 		let tuple = (value, !first)

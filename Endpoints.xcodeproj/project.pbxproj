@@ -30,6 +30,8 @@
 		AAA79FC21B34FD9E00628BD2 /* ExecutorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA79FC11B34FD9E00628BD2 /* ExecutorTests.swift */; };
 		AAA79FC41B34FDAC00628BD2 /* ExecutorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA79FC31B34FDAC00628BD2 /* ExecutorSource.swift */; };
 		AAA79FC61B350F3F00628BD2 /* UIBarButtonItem+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA79FC51B350F3F00628BD2 /* UIBarButtonItem+Endpoints.swift */; };
+		AAA79FD31B35C5D900628BD2 /* Signal+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA79FD21B35C5D900628BD2 /* Signal+Endpoints.swift */; };
+		AAA79FD51B35C67700628BD2 /* RACExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA79FD41B35C67700628BD2 /* RACExtensionTests.swift */; };
 		AABBA7B21B33C6360071774E /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AABBA7AF1B33C6360071774E /* ReactiveCocoa.framework */; };
 		AABBA7B31B33C6360071774E /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AABBA7B01B33C6360071774E /* Result.framework */; };
 		AABBA7B41B33C6360071774E /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AABBA7B11B33C6360071774E /* Box.framework */; };
@@ -72,6 +74,8 @@
 		AAA79FC11B34FD9E00628BD2 /* ExecutorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutorTests.swift; sourceTree = "<group>"; };
 		AAA79FC31B34FDAC00628BD2 /* ExecutorSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutorSource.swift; sourceTree = "<group>"; };
 		AAA79FC51B350F3F00628BD2 /* UIBarButtonItem+Endpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Endpoints.swift"; sourceTree = "<group>"; };
+		AAA79FD21B35C5D900628BD2 /* Signal+Endpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Endpoints.swift"; sourceTree = "<group>"; };
+		AAA79FD41B35C67700628BD2 /* RACExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RACExtensionTests.swift; sourceTree = "<group>"; };
 		AABBA7AF1B33C6360071774E /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/iOS/ReactiveCocoa.framework; sourceTree = "<group>"; };
 		AABBA7B01B33C6360071774E /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 		AABBA7B11B33C6360071774E /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/iOS/Box.framework; sourceTree = "<group>"; };
@@ -147,6 +151,7 @@
 				AA5721D41B33B37E00685487 /* EndpointTarget.swift */,
 				AAA79FC11B34FD9E00628BD2 /* ExecutorTests.swift */,
 				AAA79FC31B34FDAC00628BD2 /* ExecutorSource.swift */,
+				AAA79FD41B35C67700628BD2 /* RACExtensionTests.swift */,
 				AA57217D1B33A8F300685487 /* Supporting Files */,
 			);
 			path = EndpointsTests;
@@ -184,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				AA5721CE1B33B13900685487 /* SignalProducer+Endpoints.swift */,
+				AAA79FD21B35C5D900628BD2 /* Signal+Endpoints.swift */,
 			);
 			name = "RAC Extensions";
 			sourceTree = "<group>";
@@ -339,6 +345,7 @@
 				AAA79FC01B34F75600628BD2 /* Executor.swift in Sources */,
 				AA5721B51B33B10400685487 /* ObjCTarget.swift in Sources */,
 				AA5721CC1B33B11800685487 /* UITextView+Endpoints.swift in Sources */,
+				AAA79FD31B35C5D900628BD2 /* Signal+Endpoints.swift in Sources */,
 				AA5721C51B33B11800685487 /* UIControl+Endpoints.swift in Sources */,
 				AA5721C41B33B11800685487 /* UIButton+Endpoints.swift in Sources */,
 				AA5721C71B33B11800685487 /* UILabel+Endpoints.swift in Sources */,
@@ -354,6 +361,7 @@
 				AA5721D51B33B37E00685487 /* EndpointsTests.swift in Sources */,
 				AAA79FC21B34FD9E00628BD2 /* ExecutorTests.swift in Sources */,
 				AA5721D61B33B37E00685487 /* EndpointTarget.swift in Sources */,
+				AAA79FD51B35C67700628BD2 /* RACExtensionTests.swift in Sources */,
 				AAA79FC41B34FDAC00628BD2 /* ExecutorSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
