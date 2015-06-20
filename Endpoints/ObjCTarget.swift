@@ -10,6 +10,7 @@ import Foundation
 
 internal class ObjCTarget: NSObject {
 	private let callback: AnyObject -> ()
+	private var disposed = false
 
 	internal init(callback: AnyObject -> ()) {
 		self.callback = callback
@@ -19,8 +20,14 @@ internal class ObjCTarget: NSObject {
 		return "invoke:"
 	}
 
+	internal func dispose() {
+		disposed = true
+	}
+
 	@objc
 	private func invoke(sender: AnyObject) {
-		callback(sender)
+		if !disposed {
+			callback(sender)
+		}
 	}
 }

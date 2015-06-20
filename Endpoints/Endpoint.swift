@@ -51,6 +51,8 @@ public struct Endpoint<Value> {
 	}
 }
 
+
+
 /// Binds `producer` to `endpoint` and returns a Disposable that can be used
 /// to cancel the binding.
 public func <~ <T>(endpoint: Endpoint<T>, producer: SignalProducer<T, NoError>) -> Disposable {
