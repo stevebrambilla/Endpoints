@@ -69,7 +69,7 @@ class ExecutorTests: XCTestCase {
 		var count = 0
 		action.values.observe(next: { _ in count++ })
 
-		disposable += source.executor <~ action
+		disposable += source.executor.bind(action)
 		XCTAssert(count == 0)
 
 		source.trigger()
@@ -87,7 +87,7 @@ class ExecutorTests: XCTestCase {
 			return producer
 		}
 
-		disposable += source.executor <~ action
+		disposable += source.executor.bind(action)
 		XCTAssert(source.enabled == true)
 
 		source.trigger()
@@ -107,7 +107,7 @@ class ExecutorTests: XCTestCase {
 		var count = 0
 		action.values.observe(next: { _ in count++ })
 
-		let actionDisposable = source.executor <~ action
+		let actionDisposable = source.executor.bind(action)
 		XCTAssert(count == 0)
 
 		source.trigger()
@@ -129,7 +129,9 @@ class ExecutorTests: XCTestCase {
 		var last = "--"
 		action.values.observe(next: { last = $0 })
 
-		disposable += source.executor <~ action |> ignoreInput
+		disposable += source.executor
+			.ignoreEvents()
+			.bind(action)
 		XCTAssert(last == "--")
 
 		source.trigger()
@@ -146,7 +148,9 @@ class ExecutorTests: XCTestCase {
 		var last = "--"
 		action.values.observe(next: { last = $0 })
 
-		disposable += source.executor <~ action |> mapInput { String($0) }
+		disposable += source.executor
+			.mapEvents { String($0) }
+			.bind(action)
 		XCTAssert(last == "--")
 
 		source.trigger()

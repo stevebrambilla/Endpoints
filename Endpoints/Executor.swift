@@ -71,16 +71,3 @@ public struct Executor<Event> {
 		return CompositeDisposable([enabledDisposable, eventsDisposable])
 	}
 }
-
-// ----------------------------------------------------------------------------
-// MARK: - Binding Operator
-
-
-/// Binds `action` to `executor` so the Action is executed whenever the Executor
-/// sends an event. The value of the execution event is used as the input to the
-/// Action.
-///
-/// Returns a Disposable that can be used to cancel the binding.
-public func <~ <Event, Output, Error>(executor: Executor<Event>, action: Action<Event, Output, Error>) -> Disposable {
-	return executor.bind(action)
-}
