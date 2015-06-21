@@ -21,19 +21,29 @@ import ReactiveCocoa
 /// ReactiveCocoa bind operator (`<~`).
 ///
 /// If the Executor's Event type doesn't match the Action's Input type, a 
-/// transform function can be provided to map Events to Inputs:
-///
-/// Example:
-///
-///     button.executor <~ action |> ignoreEvents
-///
+/// transform function can be provided to map Events to Inputs.
 public struct Executor<Event> {
 	private let enabledEndpoint: Endpoint<Bool>
 	private let executionEventProducer: SignalProducer<Event, NoError>
 
+	public init<T>(enabled: Endpoint<Bool>, eventProducer: SignalProducer<T, NoError>, transform: T -> Event) {
+		self.enabledEndpoint = enabled
+		self.executionEventProducer = eventProducer |> map(transform)
+	}
+
 	public init(enabled: Endpoint<Bool>, eventProducer: SignalProducer<Event, NoError>) {
 		self.enabledEndpoint = enabled
 		self.executionEventProducer = eventProducer
+	}
+
+	/// Maps each event from the Executor to a new value.
+	public func mapEvents<T>(transform: Event -> T) -> Executor<T> {
+		return Executor<T>(enabled: enabledEndpoint, eventProducer: executionEventProducer, transform: transform)
+	}
+
+	/// Ignores all event values by sending Void instead.
+	public func ignoreEvents() -> Executor<()> {
+		return mapEvents { _ in () }
 	}
 
 	/// Binds `action` to `executor` so the Action is executed whenever the
@@ -43,16 +53,6 @@ public struct Executor<Event> {
 	/// Returns a Disposable that can be used to cancel the binding.
 	public func bind<Output, Error>(action: Action<Event, Output, Error>) -> Disposable {
 		return bind(action, transform: { $0 })
-	}
-
-	/// Binds `actionAdaptor` to `executor` so the adapted Action is executed
-	/// whenever the Executor sends an event. The values of the execution events
-	/// are transformed by the ActionAdaptor before being used as the input to
-	/// the Action.
-	///
-	/// Returns a Disposable that can be used to cancel the binding.
-	public func bind<Input, Output, Error>(adaptor: ActionAdaptor<Event, Input, Output, Error>) -> Disposable {
-		return bind(adaptor.action, transform: adaptor.transform)
 	}
 
 	/// Binds `action` to `executor` so the Action is executed whenever the
@@ -73,47 +73,8 @@ public struct Executor<Event> {
 }
 
 // ----------------------------------------------------------------------------
-// MARK: - Adapting Actions
-
-/// Used to adapt an Action to an Executor's Event type by transforming the
-/// Event type to an Action's Input type.
-public struct ActionAdaptor<Event, Input, Output, Error: ErrorType> {
-	internal let action: Action<Input, Output, Error>
-	internal let transform: Event -> Input
-
-	public init(action: Action<Input, Output, Error>, transform: Event -> Input) {
-		self.action = action
-		self.transform = transform
-	}
-}
-
-/// Returns an ActionAdaptor that transforms Events to an Action's Input type.
-public func |> <Event, Input, Output, Error: ErrorType>(action: Action<Input, Output, Error>, @noescape transform: Action<Input, Output, Error> -> ActionAdaptor<Event, Input, Output, Error>) -> ActionAdaptor<Event, Input, Output, Error> {
-	return transform(action)
-}
-
-/// Ignores events for Actions that do not take any input.
-public func ignoreInput<Event, Output, Error: ErrorType>(action: Action<(), Output, Error>) -> ActionAdaptor<Event, (), Output, Error> {
-	return ActionAdaptor(action: action) { _ in () }
-}
-
-/// Maps events to the Action's Input type.
-public func mapInput<Event, Input, Output, Error: ErrorType>(transform: Event -> Input)(action: Action<Input, Output, Error>) -> ActionAdaptor<Event, Input, Output, Error> {
-	return ActionAdaptor(action: action, transform: transform)
-}
-
-// ----------------------------------------------------------------------------
 // MARK: - Binding Operator
 
-/// Binds `actionAdaptor` to `executor` so the adapted Action is executed
-/// whenever the Executor sends an event. The values of the execution events are
-/// transformed by the ActionAdaptor before being used as the input to the 
-/// Action.
-///
-/// Returns a Disposable that can be used to cancel the binding.
-public func <~ <Event, Input, Output, Error>(executor: Executor<Event>, actionAdaptor: ActionAdaptor<Event, Input, Output, Error>) -> Disposable {
-	return executor.bind(actionAdaptor)
-}
 
 /// Binds `action` to `executor` so the Action is executed whenever the Executor
 /// sends an event. The value of the execution event is used as the input to the
