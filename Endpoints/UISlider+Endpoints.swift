@@ -44,7 +44,7 @@ extension UISlider {
 	/// signal producer.
 	public func valueProducer() -> SignalProducer<Float, NoError> {
 		let valueChanges = controlEventsProducer(UIControlEvents.ValueChanged)
-			|> map { sender -> Float in
+			.map { sender -> Float in
 				if let slider = sender as? UISlider {
 					return slider.value
 				} else {
@@ -52,6 +52,6 @@ extension UISlider {
 				}
 			}
 		
-		return SignalProducer(value: value) |> concat(valueChanges)
+		return SignalProducer(value: value).concat(valueChanges)
 	}
 }

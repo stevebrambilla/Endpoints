@@ -28,7 +28,7 @@ public struct Executor<Event> {
 
 	public init<T>(enabled: Endpoint<Bool>, eventProducer: SignalProducer<T, NoError>, transform: T -> Event) {
 		self.enabledEndpoint = enabled
-		self.executionEventProducer = eventProducer |> map(transform)
+		self.executionEventProducer = eventProducer.map(transform)
 	}
 
 	public init(enabled: Endpoint<Bool>, eventProducer: SignalProducer<Event, NoError>) {
@@ -63,10 +63,10 @@ public struct Executor<Event> {
 	public func bind<Input, Output, Error>(action: Action<Input, Output, Error>, transform: Event -> Input) -> Disposable {
 		let enabledDisposable = enabledEndpoint.bind(action.enabled.producer)
 
-		let eventsDisposable = executionEventProducer.start(next: { sender in
+		let eventsDisposable = executionEventProducer.startWithNext { sender in
 			let input = transform(sender)
 			action.apply(input).start()
-		})
+		}
 
 		return CompositeDisposable([enabledDisposable, eventsDisposable])
 	}

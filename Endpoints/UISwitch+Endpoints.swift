@@ -44,7 +44,7 @@ extension UISwitch {
 	/// producer.
 	public func onProducer() -> SignalProducer<Bool, NoError> {
 		let onChanges = controlEventsProducer(UIControlEvents.ValueChanged)
-			|> map { sender -> Bool in
+			.map { sender -> Bool in
 				if let theSwitch = sender as? UISwitch {
 					return theSwitch.on
 				} else {
@@ -52,6 +52,6 @@ extension UISwitch {
 				}
 			}
 
-		return SignalProducer(value: on) |> concat(onChanges)
+		return SignalProducer(value: on).concat(onChanges)
 	}
 }

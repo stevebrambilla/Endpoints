@@ -53,17 +53,16 @@ extension UITextField {
 	///
 	/// The current value of `text` is sent immediately upon starting the signal
 	/// producer.
-	public func textProducer() -> SignalProducer<String, NoError> {
+	public func textProducer() -> SignalProducer<String?, NoError> {
 		let textChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
-			|> map { sender -> String in
-				if let textField = sender as? UITextField {
-					return textField.text
-				} else {
+			.map { sender -> String? in
+				guard let textField = sender as? UITextField else {
 					fatalError("Expected sender to be an instance of UITextField, got: \(sender).")
 				}
+				return textField.text
 			}
 
-		return SignalProducer(value: text) |> concat(textChanges)
+		return SignalProducer(value: text).concat(textChanges)
 	}
 
 	/// Returns a signal producer that sends the `editing` value each time an
@@ -79,7 +78,7 @@ extension UITextField {
 	/// signal producer.
 	public func editingProducer() -> SignalProducer<Bool, NoError> {
 		let editingChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
-			|> map { sender -> Bool in
+			.map { sender -> Bool in
 				if let textField = sender as? UITextField {
 					return textField.editing
 				} else {
@@ -87,6 +86,6 @@ extension UITextField {
 				}
 			}
 
-		return SignalProducer(value: editing) |> concat(editingChanges)
+		return SignalProducer(value: editing).concat(editingChanges)
 	}
 }

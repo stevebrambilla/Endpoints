@@ -45,12 +45,12 @@ public struct Endpoint<Value> {
 	public func bind(producer: SignalProducer<Value, NoError>) -> Disposable {
 		return producer
 			// Create a () -> () setter closure with the target and view strongly captured.
-			|> map { self.createSetter($0) }
+			.map { self.createSetter($0) }
 			// Stop if the closure couldn't be created -- the target ref has been zero'd.
-			|> takeWhile { $0 != nil }
+			.takeWhile { $0 != nil }
 			// Execute the setter on the UI thread.
-			|> observeOn(UIScheduler())
-			|> start(next: { setter in setter?() })
+			.observeOn(UIScheduler())
+			.startWithNext { setter in setter?() }
 	}
 }
 
