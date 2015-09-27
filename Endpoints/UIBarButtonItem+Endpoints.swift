@@ -54,6 +54,6 @@ extension UIBarButtonItem {
 	///
 	/// This will reset the item's `target` and `action`.
 	public var executor: Executor<AnyObject> {
-		return Executor(enabled: enabledEndpoint, eventProducer: buttonTapProducer())
+		return Executor(enabled: enabledEndpoint, trigger: buttonTapProducer())
 	}
 }

@@ -73,6 +73,6 @@ extension UIButton {
 	/// Returns an Exector that executes an Action when the UIBarButtonItem is
 	/// tapped, and binds its `enabled` value to the Action's.
 	public var executor: Executor<AnyObject> {
-		return Executor(enabled: enabledEndpoint, eventProducer: buttonTapProducer())
+		return Executor(enabled: enabledEndpoint, trigger: buttonTapProducer())
 	}
 }

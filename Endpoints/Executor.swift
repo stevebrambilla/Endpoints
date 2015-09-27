@@ -12,38 +12,38 @@ import ReactiveCocoa
 // ----------------------------------------------------------------------------
 // MARK: - Executor
 
-/// Executors are used to attach Actions to objects that trigger execution 
-/// events, typically used to bind to UI controls. Executors also bind the 
-/// `enabled` state of Actions to an Endpoint that is exposed by the executor's
-/// owner.
+/// Executors are used to attach Actions to objects that trigger executions
+/// (like buttons). They are typically used to bind actions to UI controls.
+/// Executors also bind the `enabled` state of Actions to an Endpoint that is
+/// exposed by the executor's owner.
 ///
 /// Actions can be bound to Executors using the `bind()` method, or the 
 /// ReactiveCocoa bind operator (`<~`).
 ///
-/// If the Executor's Event type doesn't match the Action's Input type, a 
-/// transform function can be provided to map Events to Inputs.
-public struct Executor<Event> {
+/// If the Executor's trigger `Payload` type doesn't match the Action's `Input`
+/// type, a transform function can be provided to map `Payloads` to `Inputs`.
+public struct Executor<Payload> {
 	private let enabledEndpoint: Endpoint<Bool>
-	private let executionEventProducer: SignalProducer<Event, NoError>
+	private let triggerEvents: SignalProducer<Payload, NoError>
 
-	public init<T>(enabled: Endpoint<Bool>, eventProducer: SignalProducer<T, NoError>, transform: T -> Event) {
+	public init<T>(enabled: Endpoint<Bool>, trigger: SignalProducer<T, NoError>, transform: T -> Payload) {
 		self.enabledEndpoint = enabled
-		self.executionEventProducer = eventProducer.map(transform)
+		self.triggerEvents = trigger.map(transform)
 	}
 
-	public init(enabled: Endpoint<Bool>, eventProducer: SignalProducer<Event, NoError>) {
+	public init(enabled: Endpoint<Bool>, trigger: SignalProducer<Payload, NoError>) {
 		self.enabledEndpoint = enabled
-		self.executionEventProducer = eventProducer
+		self.triggerEvents = trigger
 	}
 
-	/// Maps each event from the Executor to a new value.
-	public func mapEvents<T>(transform: Event -> T) -> Executor<T> {
-		return Executor<T>(enabled: enabledEndpoint, eventProducer: executionEventProducer, transform: transform)
+	/// Maps each trigger payload from the Executor to a new value.
+	public func mapPayloads<U>(transform: Payload -> U) -> Executor<U> {
+		return Executor<U>(enabled: enabledEndpoint, trigger: triggerEvents, transform: transform)
 	}
 
-	/// Ignores all event values by sending Void instead.
-	public func ignoreEvents() -> Executor<()> {
-		return mapEvents { _ in () }
+	/// Ignores all trigger payloads by sending Void instead.
+	public func ignorePayloads() -> Executor<Void> {
+		return mapPayloads { _ in () }
 	}
 
 	/// Binds `action` to `executor` so the Action is executed whenever the
@@ -51,7 +51,7 @@ public struct Executor<Event> {
 	/// input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
-	public func bind<Output, Error>(action: Action<Event, Output, Error>) -> Disposable {
+	public func bind<Output, Error>(action: Action<Payload, Output, Error>) -> Disposable {
 		return bind(action, transform: { $0 })
 	}
 
@@ -60,11 +60,11 @@ public struct Executor<Event> {
 	/// by applying `transform` before being used as the input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
-	public func bind<Input, Output, Error>(action: Action<Input, Output, Error>, transform: Event -> Input) -> Disposable {
+	public func bind<Input, Output, Error>(action: Action<Input, Output, Error>, transform: Payload -> Input) -> Disposable {
 		let enabledDisposable = enabledEndpoint.bind(action.enabled.producer)
 
-		let eventsDisposable = executionEventProducer.startWithNext { sender in
-			let input = transform(sender)
+		let eventsDisposable = triggerEvents.startWithNext { payload in
+			let input = transform(payload)
 			action.apply(input).start()
 		}
 

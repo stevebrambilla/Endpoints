@@ -18,11 +18,11 @@ class ExecutorSource {
 	var executor: Executor<Int> {
 		let enabled = Endpoint(self) { $0.enabled = $1 }
 
-		let producer = SignalProducer { observer, disposable in
+		let producer = SignalProducer { observer, _ in
 			eventSignal.observe(observer)
 		}
 
-		return Executor(enabled: enabled, eventProducer: producer)
+		return Executor(enabled: enabled, trigger: producer)
 	}
 
 	private var count = 0

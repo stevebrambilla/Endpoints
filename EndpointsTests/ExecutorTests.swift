@@ -130,7 +130,7 @@ class ExecutorTests: XCTestCase {
 		action.values.observeNext { last = $0 }
 
 		disposable += source.executor
-			.ignoreEvents()
+			.ignorePayloads()
 			.bind(action)
 		XCTAssert(last == "--")
 
@@ -149,7 +149,7 @@ class ExecutorTests: XCTestCase {
 		action.values.observeNext { last = $0 }
 
 		disposable += source.executor
-			.mapEvents { String($0) }
+			.mapPayloads { String($0) }
 			.bind(action)
 		XCTAssert(last == "--")
 
