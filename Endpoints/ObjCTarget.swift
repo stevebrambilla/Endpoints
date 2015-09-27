@@ -24,8 +24,7 @@ internal class ObjCTarget: NSObject {
 		disposed = true
 	}
 
-	@objc
-	private func invoke(sender: AnyObject) {
+	@objc private func invoke(sender: AnyObject) {
 		if !disposed {
 			callback(sender)
 		}

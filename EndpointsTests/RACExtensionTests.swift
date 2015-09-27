@@ -15,9 +15,9 @@ import Result
 class RACExtensionTests: XCTestCase {
 	func testAnimateFollowingFirst() {
 		let source = SignalProducer<Int, NoError>(values: [1, 2, 3])
-		let producer = source |> animateFollowingFirst
+		let producer = source.animateFollowingFirst()
 
-		let result = producer |> collect |> last
+		let result = producer.collect().last()
 
 		if let tuples = result?.value where tuples.count == 3 {
 			XCTAssert(tuples[0].0 == 1 && tuples[0].1 == false)
@@ -33,14 +33,14 @@ class RACExtensionTests: XCTestCase {
 
 		var tested = false
 		signal
-			|> withInitialValue(1)
-			|> collect
-			|> start(next: { values in
+			.withInitialValue(1)
+			.collect()
+			.startWithNext { values in
 				XCTAssert(values[0] == 1)
 				XCTAssert(values[1] == 2)
 				XCTAssert(values[2] == 3)
 				tested = true
-			})
+			}
 
 		sendNext(observer, 2)
 		sendNext(observer, 3)

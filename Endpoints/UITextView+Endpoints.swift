@@ -58,10 +58,18 @@ extension UITextView {
 	///
 	/// The current value of `text` is sent immediately upon starting the signal
 	/// producer.
-	public func textProducer() -> SignalProducer<String, NoError> {
+	public var textProducer: SignalProducer<String, NoError> {
+		// Current value lookup deferred until producer is started.
+		let currentValue = SignalProducer<String, NoError> { [weak self] observer, _ in
+			if let textView = self {
+				sendNext(observer, textView.text)
+			}
+			sendCompleted(observer)
+		}
+
 		let notificationCenter = NSNotificationCenter.defaultCenter()
-		let textChanges = notificationCenter.rac_notifications(name: UITextViewTextDidChangeNotification, object: self)
-			|> map { notification -> String in
+		let textChanges = notificationCenter.rac_notifications(UITextViewTextDidChangeNotification, object: self)
+			.map { notification -> String in
 				if let textView = notification.object as? UITextView {
 					return String(textView.text)
 				} else {
@@ -69,7 +77,7 @@ extension UITextView {
 				}
 			}
 
-		return SignalProducer(value: text) |> concat(textChanges)
+		return currentValue.concat(textChanges)
 	}
 
 	/// Returns a signal producer that sends the `editing` value each time the
@@ -86,10 +94,10 @@ extension UITextView {
 	/// provided it defaults to `false`.
 	public func editingProducer(initialValue: Bool = false) -> SignalProducer<Bool, NoError> {
 		let notificationCenter = NSNotificationCenter.defaultCenter()
-		let beganEditing = notificationCenter.rac_notifications(name: UITextViewTextDidBeginEditingNotification, object: self) |> map { _ in true }
-		let endedEditing = notificationCenter.rac_notifications(name: UITextViewTextDidEndEditingNotification, object: self) |> map { _ in false }
-		let editingChanges = SignalProducer(values: [beganEditing, endedEditing]) |> flatten(.Merge)
+		let beganEditing = notificationCenter.rac_notifications(UITextViewTextDidBeginEditingNotification, object: self).map { _ in true }
+		let endedEditing = notificationCenter.rac_notifications(UITextViewTextDidEndEditingNotification, object: self).map { _ in false }
+		let editingChanges = SignalProducer(values: [beganEditing, endedEditing]).flatten(.Merge)
 
-		return SignalProducer(value: initialValue) |> concat(editingChanges)
+		return SignalProducer(value: initialValue).concat(editingChanges)
 	}
 }

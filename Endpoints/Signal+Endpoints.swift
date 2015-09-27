@@ -9,11 +9,14 @@
 import Foundation
 import ReactiveCocoa
 
-/// Creates a SignalProducer from a Signal and prepends an initial value to the
-/// stream, which is sent immediately when the SignalProducer is started.
-public func withInitialValue<T, E>(initialValue: T)(signal: Signal<T, E>) -> SignalProducer<T, E> {
-	return SignalProducer { observer, disposable in
-		sendNext(observer, initialValue)
-		signal.observe(observer)
+extension SignalType {
+	/// Creates a SignalProducer from a Signal and prepends an initial value to
+	/// the stream, which is sent immediately when the SignalProducer is 
+	/// started.
+	public func withInitialValue(initialValue: Value) -> SignalProducer<Value, Error> {
+		return SignalProducer { observer, disposable in
+			sendNext(observer, initialValue)
+			disposable += self.signal.observe(observer)
+		}
 	}
 }

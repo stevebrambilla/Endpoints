@@ -53,17 +53,24 @@ extension UITextField {
 	///
 	/// The current value of `text` is sent immediately upon starting the signal
 	/// producer.
-	public func textProducer() -> SignalProducer<String, NoError> {
+	public var textProducer: SignalProducer<String?, NoError> {
+		// Current value lookup deferred until producer is started.
+		let currentValue = SignalProducer<String?, NoError> { [weak self] observer, _ in
+			if let textField = self {
+				sendNext(observer, textField.text)
+			}
+			sendCompleted(observer)
+		}
+
 		let textChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
-			|> map { sender -> String in
-				if let textField = sender as? UITextField {
-					return textField.text
-				} else {
+			.map { sender -> String? in
+				guard let textField = sender as? UITextField else {
 					fatalError("Expected sender to be an instance of UITextField, got: \(sender).")
 				}
+				return textField.text
 			}
 
-		return SignalProducer(value: text) |> concat(textChanges)
+		return currentValue.concat(textChanges)
 	}
 
 	/// Returns a signal producer that sends the `editing` value each time an
@@ -77,9 +84,17 @@ extension UITextField {
 	///
 	/// The current value of `editing` is sent immediately upon starting the
 	/// signal producer.
-	public func editingProducer() -> SignalProducer<Bool, NoError> {
+	public var editingProducer: SignalProducer<Bool, NoError> {
+		// Current value lookup deferred until producer is started.
+		let currentValue = SignalProducer<Bool, NoError> { [weak self] observer, _ in
+			if let textField = self {
+				sendNext(observer, textField.editing)
+			}
+			sendCompleted(observer)
+		}
+
 		let editingChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
-			|> map { sender -> Bool in
+			.map { sender -> Bool in
 				if let textField = sender as? UITextField {
 					return textField.editing
 				} else {
@@ -87,6 +102,6 @@ extension UITextField {
 				}
 			}
 
-		return SignalProducer(value: editing) |> concat(editingChanges)
+		return currentValue.concat(editingChanges)
 	}
 }
