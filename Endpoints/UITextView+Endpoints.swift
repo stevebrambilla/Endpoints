@@ -12,13 +12,18 @@ import ReactiveCocoa
 // ----------------------------------------------------------------------------
 // MARK: - Endpoints
 
+// Endpoints that are available for iOS, but not for tvOS.
+#if os(iOS)
 extension UITextView {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextView`'s
 	/// `editable` value.
 	public var editableEndpoint: Endpoint<Bool> {
 		return Endpoint(self) { $0.editable = $1 }
 	}
+}
+#endif
 
+extension UITextView {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextView`'s `text`
 	/// value.
 	public var textEndpoint: Endpoint<String> {
