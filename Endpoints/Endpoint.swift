@@ -8,6 +8,7 @@
 
 import Foundation
 import ReactiveCocoa
+import Result
 
 // ----------------------------------------------------------------------------
 // MARK: - Endpoint
@@ -24,19 +25,17 @@ import ReactiveCocoa
 /// bound signal producers.
 ///
 /// Endpoints keep a *weak* reference to their targets. If a value is sent to an
-/// endpoint whose target reference has been zero'd out the signal will
-/// automatically complete, cancelling the binding.
+/// endpoint whose target reference has been zero'd out, the binding will be
+/// terminated.
 public struct Endpoint<Value> {
-	private let createSetter: Value -> (() -> ())?
+	private typealias Setter = () -> ()
+	private let generateSetter: Value -> Result<Setter, EndpointError>
 
 	public init<Target: AnyObject>(_ target: Target, writeValue: (Target, Value) -> ()) {
-		weak var weakTarget = target
-
-		self.createSetter = { value in
-			if let target = weakTarget {
-				return { writeValue(target, value) } // Strongly captures the target
-			}
-			return nil
+		self.generateSetter = { [weak target] value in
+			guard let strongTarget = target else { return Result(error: .TargetZerod) }
+			let setter = { writeValue(strongTarget, value) } // Strongly captures the target
+			return Result(value: setter)
 		}
 	}
 
@@ -44,14 +43,20 @@ public struct Endpoint<Value> {
 	/// used to cancel the binding.
 	public func bind(producer: SignalProducer<Value, NoError>) -> Disposable {
 		return producer
-			// Create a () -> () setter closure with the target and view strongly captured.
-			.map { self.createSetter($0) }
-			// Stop if the closure couldn't be created -- the target ref has been zero'd.
-			.takeWhile { $0 != nil }
+			.promoteErrors(EndpointError)
+
+			// Create a Setter with the strongly captured target.
+			// If an error occurs (eg. target was zero'd), then the binding terminates.
+			.attemptMap(self.generateSetter)
+
 			// Execute the setter on the UI thread.
 			.observeOn(UIScheduler())
-			.startWithNext { setter in setter?() }
+			.startWithNext { setter in setter() }
 	}
+}
+
+private enum EndpointError: ErrorType {
+	case TargetZerod
 }
 
 // ----------------------------------------------------------------------------
