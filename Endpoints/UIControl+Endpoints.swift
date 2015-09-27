@@ -44,7 +44,7 @@ extension UIControl {
 	/// it will complete immediately. Otherwise this producer will not terminate
 	/// naturally, so it must be explicitly disposed to avoid leaks.
 	public func controlEventsProducer(events: UIControlEvents) -> SignalProducer<AnyObject, NoError> {
-		return SignalProducer() { [weak self] observer, disposable in
+		return SignalProducer { [weak self] observer, disposable in
 			let target = ObjCTarget() { sender in
 				sendNext(observer, sender)
 			}

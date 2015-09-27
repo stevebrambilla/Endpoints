@@ -23,8 +23,8 @@ extension UIBarButtonItem {
 	/// to avoid leaks.
 	///
 	/// This will reset the item's `target` and `action`.
-	public func buttonTapProducer() -> SignalProducer<AnyObject, NoError> {
-		return SignalProducer() { [weak self] observer, disposable in
+	public var triggerProducer: SignalProducer<UIBarButtonItem, NoError> {
+		let sourceEvents = SignalProducer<AnyObject, NoError> { [weak self] observer, disposable in
 			let target = ObjCTarget() { sender in
 				sendNext(observer, sender)
 			}
@@ -42,6 +42,13 @@ extension UIBarButtonItem {
 				sendCompleted(observer)
 			}
 		}
+
+		return sourceEvents.map { sender in
+			guard let item = sender as? UIBarButtonItem else {
+				fatalError("Expected sender to be an instance of UIBarButtonItem, got: \(sender).")
+			}
+			return item
+		}
 	}
 }
 
@@ -53,7 +60,7 @@ extension UIBarButtonItem {
 	/// tapped, and binds its `enabled` value to the Action's.
 	///
 	/// This will reset the item's `target` and `action`.
-	public var executor: Executor<AnyObject> {
-		return Executor(enabled: enabledEndpoint, trigger: buttonTapProducer())
+	public var executor: Executor<UIBarButtonItem> {
+		return Executor(enabled: enabledEndpoint, trigger: triggerProducer)
 	}
 }

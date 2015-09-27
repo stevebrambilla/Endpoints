@@ -42,8 +42,8 @@ extension UISlider {
 	///
 	/// The current value of `value` is sent immediately upon starting the
 	/// signal producer.
-	public func valueProducer() -> SignalProducer<Float, NoError> {
-		let valueChanges = controlEventsProducer(UIControlEvents.ValueChanged)
+	public var valueProducer: SignalProducer<Float, NoError> {
+		let valueChanges = controlEventsProducer(.ValueChanged)
 			.map { sender -> Float in
 				if let slider = sender as? UISlider {
 					return slider.value

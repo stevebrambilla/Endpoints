@@ -58,7 +58,7 @@ extension UITextView {
 	///
 	/// The current value of `text` is sent immediately upon starting the signal
 	/// producer.
-	public func textProducer() -> SignalProducer<String, NoError> {
+	public var textProducer: SignalProducer<String, NoError> {
 		let notificationCenter = NSNotificationCenter.defaultCenter()
 		let textChanges = notificationCenter.rac_notifications(UITextViewTextDidChangeNotification, object: self)
 			.map { notification -> String in

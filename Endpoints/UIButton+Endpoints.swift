@@ -55,14 +55,28 @@ extension UIButton {
 
 extension UIButton {
 	/// Returns a signal producer that sends the `sender` each time an action
-	/// message is sent for a .TouchUpInside event on the `UIButton`
+	/// message is sent for a .PrimaryActionTriggered event on the `UIButton`
 	///
 	/// Note that the `UIButton` is weakly referenced by the `SignalProducer`.
 	/// If the `UIButton` is deallocated before the signal producer is started
 	/// it will complete immediately. Otherwise this producer will not terminate
 	/// naturally, so it must be explicitly disposed to avoid leaks.
-	public func buttonTapProducer() -> SignalProducer<AnyObject, NoError> {
-		return controlEventsProducer(UIControlEvents.TouchUpInside)
+	public var triggerProducer: SignalProducer<UIButton, NoError> {
+		let triggerEvent: UIControlEvents = {
+			if #available(iOS 9, *) {
+				return .PrimaryActionTriggered
+			} else {
+				return .TouchUpInside
+			}
+		}()
+
+		return controlEventsProducer(triggerEvent)
+			.map { sender in
+				guard let button = sender as? UIButton else {
+					fatalError("Expected sender to be an instance of UIButton, got: \(sender).")
+				}
+				return button
+			}
 	}
 }
 
@@ -72,7 +86,7 @@ extension UIButton {
 extension UIButton {
 	/// Returns an Exector that executes an Action when the UIBarButtonItem is
 	/// tapped, and binds its `enabled` value to the Action's.
-	public var executor: Executor<AnyObject> {
-		return Executor(enabled: enabledEndpoint, trigger: buttonTapProducer())
+	public var executor: Executor<UIButton> {
+		return Executor(enabled: enabledEndpoint, trigger: triggerProducer)
 	}
 }

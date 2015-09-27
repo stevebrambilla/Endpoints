@@ -42,7 +42,7 @@ extension UISwitch {
 	///
 	/// The current value of `on` is sent immediately upon starting the signal
 	/// producer.
-	public func onProducer() -> SignalProducer<Bool, NoError> {
+	public var onProducer: SignalProducer<Bool, NoError> {
 		let onChanges = controlEventsProducer(UIControlEvents.ValueChanged)
 			.map { sender -> Bool in
 				if let theSwitch = sender as? UISwitch {
