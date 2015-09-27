@@ -43,6 +43,14 @@ extension UISwitch {
 	/// The current value of `on` is sent immediately upon starting the signal
 	/// producer.
 	public var onProducer: SignalProducer<Bool, NoError> {
+		// Current value lookup deferred until producer is started.
+		let currentValue = SignalProducer<Bool, NoError> { [weak self] observer, _ in
+			if let theSwitch = self {
+				sendNext(observer, theSwitch.on)
+			}
+			sendCompleted(observer)
+		}
+
 		let onChanges = controlEventsProducer(UIControlEvents.ValueChanged)
 			.map { sender -> Bool in
 				if let theSwitch = sender as? UISwitch {
@@ -52,6 +60,6 @@ extension UISwitch {
 				}
 			}
 
-		return SignalProducer(value: on).concat(onChanges)
+		return currentValue.concat(onChanges)
 	}
 }

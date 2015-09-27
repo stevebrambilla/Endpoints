@@ -54,6 +54,14 @@ extension UITextField {
 	/// The current value of `text` is sent immediately upon starting the signal
 	/// producer.
 	public var textProducer: SignalProducer<String?, NoError> {
+		// Current value lookup deferred until producer is started.
+		let currentValue = SignalProducer<String?, NoError> { [weak self] observer, _ in
+			if let textField = self {
+				sendNext(observer, textField.text)
+			}
+			sendCompleted(observer)
+		}
+
 		let textChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
 			.map { sender -> String? in
 				guard let textField = sender as? UITextField else {
@@ -62,7 +70,7 @@ extension UITextField {
 				return textField.text
 			}
 
-		return SignalProducer(value: text).concat(textChanges)
+		return currentValue.concat(textChanges)
 	}
 
 	/// Returns a signal producer that sends the `editing` value each time an
@@ -77,6 +85,14 @@ extension UITextField {
 	/// The current value of `editing` is sent immediately upon starting the
 	/// signal producer.
 	public var editingProducer: SignalProducer<Bool, NoError> {
+		// Current value lookup deferred until producer is started.
+		let currentValue = SignalProducer<Bool, NoError> { [weak self] observer, _ in
+			if let textField = self {
+				sendNext(observer, textField.editing)
+			}
+			sendCompleted(observer)
+		}
+
 		let editingChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
 			.map { sender -> Bool in
 				if let textField = sender as? UITextField {
@@ -86,6 +102,6 @@ extension UITextField {
 				}
 			}
 
-		return SignalProducer(value: editing).concat(editingChanges)
+		return currentValue.concat(editingChanges)
 	}
 }
