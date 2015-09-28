@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "--- Bootstrapping dependencies"
+if hash carthage 2>/dev/null
+then
+    carthage bootstrap --platform ios
+else
+    echo "Error: Carthage must be installed."
+    exit 1
+fi

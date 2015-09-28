@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Bootstrap the project.
+script/bootstrap
+
+# Configure the test arguments.
+XCODE_PROJECT="Endpoints.xcodeproj"
+XCODE_SCHEME="Endpoints"
+XCODE_DESTINATION="platform=iOS Simulator,name=iPhone 6s,OS=9.0"
+
+# Run the tests.
+echo "--- Testing the Endpoints framework"
+set -o pipefail && xcodebuild -project "$XCODE_PROJECT" -scheme "$XCODE_SCHEME" -destination "$XCODE_DESTINATION" test | xcpretty --color --test
