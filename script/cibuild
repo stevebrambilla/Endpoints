@@ -4,10 +4,5 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-# Install the latest Carthage build before starting the tests.
-echo "--- Updating Carthage using Homebrew"
-brew update
-brew install carthage
-
 # Run the tests.
 script/test
