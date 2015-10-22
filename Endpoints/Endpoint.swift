@@ -67,3 +67,9 @@ private enum EndpointError: ErrorType {
 public func <~ <T>(endpoint: Endpoint<T>, producer: SignalProducer<T, NoError>) -> Disposable {
 	return endpoint.bind(producer)
 }
+
+/// Binds `property` to `endpoint` and returns a Disposable that can be used
+/// to cancel the binding.
+public func <~ <T, P: PropertyType where P.Value == T>(endpoint: Endpoint<T>, property: P) -> Disposable {
+	return endpoint.bind(property.producer)
+}
