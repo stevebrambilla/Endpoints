@@ -46,21 +46,21 @@ public struct Executor<Payload> {
 		return mapPayloads { _ in () }
 	}
 
-	/// Binds `action` to `executor` so the Action is executed whenever the
+	/// Binds `executor` to `action`, so the Action is executed whenever the
 	/// Executor sends an event. The value of the execution event is used as the
 	/// input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
-	public func bind<Output, Error>(action: Action<Payload, Output, Error>) -> Disposable {
-		return bind(action, transform: { $0 })
+	public func bindTo<Output, Error>(action: Action<Payload, Output, Error>) -> Disposable {
+		return bindTo(action, transform: { $0 })
 	}
 
-	/// Binds `action` to `executor` so the Action is executed whenever the
+	/// Binds `executor` to `action`, so the Action is executed whenever the
 	/// Executor sends an event. The value of the execution event is transformed
 	/// by applying `transform` before being used as the input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
-	public func bind<Input, Output, Error>(action: Action<Input, Output, Error>, transform: Payload -> Input) -> Disposable {
+	public func bindTo<Input, Output, Error>(action: Action<Input, Output, Error>, transform: Payload -> Input) -> Disposable {
 		let enabledDisposable = enabledEndpoint.bind(action.enabled.producer)
 
 		let eventsDisposable = triggerEvents.startWithNext { payload in

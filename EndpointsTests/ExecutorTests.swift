@@ -32,7 +32,7 @@ class ExecutorTests: XCTestCase {
 		var count = 0
 		action.values.observeNext { _ in count++ }
 
-		disposable += source.executor.bind(action)
+		disposable += source.executor.bindTo(action)
 		XCTAssert(count == 0)
 
 		source.trigger()
@@ -52,7 +52,7 @@ class ExecutorTests: XCTestCase {
 		var last = "--"
 		action.values.observeNext { last = $0 }
 
-		disposable += source.executor.bind(action) { x in String(x) }
+		disposable += source.executor.bindTo(action) { x in String(x) }
 		XCTAssert(last == "--")
 
 		source.trigger()
@@ -69,7 +69,7 @@ class ExecutorTests: XCTestCase {
 		var count = 0
 		action.values.observeNext { _ in count++ }
 
-		disposable += source.executor.bind(action)
+		disposable += source.executor.bindTo(action)
 		XCTAssert(count == 0)
 
 		source.trigger()
@@ -87,7 +87,7 @@ class ExecutorTests: XCTestCase {
 			return producer
 		}
 
-		disposable += source.executor.bind(action)
+		disposable += source.executor.bindTo(action)
 		XCTAssert(source.enabled == true)
 
 		source.trigger()
@@ -107,7 +107,7 @@ class ExecutorTests: XCTestCase {
 		var count = 0
 		action.values.observeNext { _ in count++ }
 
-		let actionDisposable = source.executor.bind(action)
+		let actionDisposable = source.executor.bindTo(action)
 		XCTAssert(count == 0)
 
 		source.trigger()
@@ -131,7 +131,7 @@ class ExecutorTests: XCTestCase {
 
 		disposable += source.executor
 			.ignorePayloads()
-			.bind(action)
+			.bindTo(action)
 		XCTAssert(last == "--")
 
 		source.trigger()
@@ -150,7 +150,7 @@ class ExecutorTests: XCTestCase {
 
 		disposable += source.executor
 			.mapPayloads { String($0) }
-			.bind(action)
+			.bindTo(action)
 		XCTAssert(last == "--")
 
 		source.trigger()
