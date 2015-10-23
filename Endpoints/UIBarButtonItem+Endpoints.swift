@@ -16,30 +16,24 @@ extension UIBarButtonItem {
 	/// Returns a signal producer that sends the `sender` each time an action
 	/// message is sent.
 	///
-	/// Note that the UIBarButtonItem is weakly referenced by the
-	/// SignalProducer. If the UIBarButtonItem is deallocated before the signal
-	/// producer is started it will complete immediately. Otherwise this
-	/// producer will not terminate naturally, so it must be explicitly disposed 
-	/// to avoid leaks.
+	/// Note that the `UIBarButtonItem` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	///
 	/// This will reset the item's `target` and `action`.
 	public var triggerProducer: SignalProducer<UIBarButtonItem, NoError> {
-		let sourceEvents = SignalProducer<AnyObject, NoError> { [weak self] observer, disposable in
+		let sourceEvents = SignalProducer<AnyObject, NoError> { observer, disposable in
 			let target = ObjCTarget() { sender in
 				sendNext(observer, sender)
 			}
 
-			if let buttonItem = self {
-				buttonItem.target = target
-				buttonItem.action = target.selector
+			self.target = target
+			self.action = target.selector
 
-				disposable.addDisposable {
-					target.dispose() // Strongly retain `target`
-					self?.target = nil
-					self?.action = nil
-				}
-			} else {
-				sendCompleted(observer)
+			disposable.addDisposable {
+				target.dispose() // Strongly retains `target`
+				self.target = nil
+				self.action = nil
 			}
 		}
 

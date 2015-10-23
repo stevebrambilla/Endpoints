@@ -56,19 +56,16 @@ extension UITextView {
 	/// Returns a signal producer that sends the `text` value each time it is
 	/// changed.
 	///
-	/// Note that the `UITextView` is weakly referenced by the `SignalProducer`.
-	/// If the `UITextView` is deallocated before the signal producer is started
-	/// it will complete immediately. Otherwise this producer will not terminate
-	/// naturally, so it must be explicitly disposed to avoid leaks.
+	/// Note that the `UITextView` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	///
 	/// The current value of `text` is sent immediately upon starting the signal
 	/// producer.
 	public var textProducer: SignalProducer<String, NoError> {
 		// Current value lookup deferred until producer is started.
-		let currentValue = SignalProducer<String, NoError> { [weak self] observer, _ in
-			if let textView = self {
-				sendNext(observer, textView.text)
-			}
+		let currentValue = SignalProducer<String, NoError> { observer, _ in
+			sendNext(observer, self.text)
 			sendCompleted(observer)
 		}
 

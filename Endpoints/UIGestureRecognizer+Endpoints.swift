@@ -27,26 +27,20 @@ extension UIGestureRecognizer {
 	/// Returns a signal producer that sends the gesture recognizer each time
 	/// an action message is sent by the gesture recognizer.
 	///
-	/// Note that the `UIGestureRecognizer` is weakly referenced by the
-	/// `SignalProducer`. If the `UIGestureRecognizer` is deallocated before the
-	/// signal producer is started, it will complete immediately. Otherwise this
-	/// producer will not terminate naturally, so it must be explicitly disposed
-	/// to avoid leaks.
+	/// Note that the `UIGestureRecognizer` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	public var gestureEventsProducer: SignalProducer<UIGestureRecognizer, NoError> {
-		return SignalProducer { [weak self] observer, disposable in
+		return SignalProducer { observer, disposable in
 			let target = ObjCTarget() { target in
 				guard let gestureRecognizer = target as? UIGestureRecognizer else { return }
 				sendNext(observer, gestureRecognizer)
 			}
 
-			if let gestureRecognizer = self {
-				gestureRecognizer.addTarget(target, action: target.selector)
+			self.addTarget(target, action: target.selector)
 
-				disposable.addDisposable {
-					self?.removeTarget(target, action: target.selector)
-				}
-			} else {
-				sendCompleted(observer)
+			disposable.addDisposable {
+				self.removeTarget(target, action: target.selector)
 			}
 		}
 	}
@@ -54,11 +48,9 @@ extension UIGestureRecognizer {
 	/// Returns a signal producer that sends the gesture recognizer each time
 	/// the gesture recognizer recognizes its gesture.
 	///
-	/// Note that the `UIGestureRecognizer` is weakly referenced by the
-	/// `SignalProducer`. If the `UIGestureRecognizer` is deallocated before the
-	/// signal producer is started, it will complete immediately. Otherwise this
-	/// producer will not terminate naturally, so it must be explicitly disposed
-	/// to avoid leaks.
+	/// Note that the `UIGestureRecognizer` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	public var recognizedEventsProducer: SignalProducer<UIGestureRecognizer, NoError> {
 		return gestureEventsProducer.filter { $0.state == .Recognized }
 	}
