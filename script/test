@@ -7,8 +7,8 @@ set -e
 
 PROJECT_DISPLAY_NAME="Endpoints"
 XCODE_PROJECT="Endpoints.xcodeproj"
-XCODE_SCHEME="Endpoints"
-XCODE_DESTINATION="platform=iOS Simulator,name=iPhone 6,OS=9.0"
+XCODE_SCHEME="Endpoints-iOS"
+XCODE_DESTINATION="platform=iOS Simulator,name=iPhone 6,OS=9.1"
 XCODE_SDK="iphonesimulator"
 
 main () {

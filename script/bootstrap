@@ -9,7 +9,7 @@ PROJECT_DISPLAY_NAME="Endpoints"
 echo "--- [$PROJECT_DISPLAY_NAME] Bootstrapping dependencies"
 if hash carthage 2>/dev/null
 then
-    carthage bootstrap --no-use-binaries --platform ios
+    carthage bootstrap --no-use-binaries --platform ios,tvos
 else
     echo "Error: Carthage must be installed."
     exit 1
