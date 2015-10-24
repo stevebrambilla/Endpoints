@@ -1,1 +1,2 @@
-github "ReactiveCocoa/ReactiveCocoa" "4.0-alpha.1"
+github "antitypical/Result" "0.6.0-beta.2"
+github "ReactiveCocoa/ReactiveCocoa" "revert-2359-revert-tvOS"

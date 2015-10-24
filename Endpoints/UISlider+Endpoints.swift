@@ -35,19 +35,16 @@ extension UISlider {
 	/// Returns a signal producer that sends the `value` each time the value is
 	/// changed.
 	///
-	/// Note that the `UISlider` is weakly referenced by the `SignalProducer`.
-	/// If the `UISlider` is deallocated before the signal producer is started
-	/// it will complete immediately. Otherwise this producer will not terminate
-	/// naturally, so it must be explicitly disposed to avoid leaks.
+	/// Note that the `UISlider` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	///
 	/// The current value of `value` is sent immediately upon starting the
 	/// signal producer.
 	public var valueProducer: SignalProducer<Float, NoError> {
 		// Current value lookup deferred until producer is started.
-		let currentValue = SignalProducer<Float, NoError> { [weak self] observer, _ in
-			if let slider = self {
-				sendNext(observer, slider.value)
-			}
+		let currentValue = SignalProducer<Float, NoError> { observer, _ in
+			sendNext(observer, self.value)
 			sendCompleted(observer)
 		}
 

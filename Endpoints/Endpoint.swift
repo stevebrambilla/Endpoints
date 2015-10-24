@@ -16,8 +16,12 @@ import Result
 /// Endpoints are used to create one-way bindings from `SignalProducer`s to
 /// object properties, typically for binding data to views.
 ///
-/// Signal producers can be bound to Endpoints using the `bind()` method, or
-/// the ReactiveCocoa bind operator (`<~`).
+/// Signal producers can be bound to Endpoints using:
+/// 
+/// - `SignalProducer.bindTo(<endpoint>)`
+/// - `Property.bindTo(<endpoint>)`
+/// - `Endpoint.bind(<producer>)`
+/// - The ReactiveCocoa bind operator (`<~`)
 ///
 /// Endpoints are expected to be exposed by UI classes, so binding a signal
 /// producer guarantees that the setter is invoked on the main thread. 
@@ -66,4 +70,10 @@ private enum EndpointError: ErrorType {
 /// to cancel the binding.
 public func <~ <T>(endpoint: Endpoint<T>, producer: SignalProducer<T, NoError>) -> Disposable {
 	return endpoint.bind(producer)
+}
+
+/// Binds `property` to `endpoint` and returns a Disposable that can be used
+/// to cancel the binding.
+public func <~ <T, P: PropertyType where P.Value == T>(endpoint: Endpoint<T>, property: P) -> Disposable {
+	return endpoint.bind(property.producer)
 }
