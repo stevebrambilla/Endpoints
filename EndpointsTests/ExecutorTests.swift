@@ -97,6 +97,32 @@ class ExecutorTests: XCTestCase {
 		XCTAssert(source.enabled == true)
 	}
 
+	func testEnabledAfterCallback() {
+		let source = ExecutorSource()
+
+		let (producer, observer) = SignalProducer<Int, NoError>.buffer(1)
+		let action = Action<Int, Int, NoError> { x in
+			return producer
+		}
+
+		var onEnabled: Bool?
+
+		disposable += source.executor
+			.on(enabled: { enabled in onEnabled = enabled })
+			.bindTo(action)
+
+		XCTAssert(onEnabled == true)
+		XCTAssert(source.enabled == true)
+
+		source.trigger()
+		XCTAssert(onEnabled == false)
+		XCTAssert(source.enabled == false)
+
+		sendCompleted(observer)
+		XCTAssert(onEnabled == true)
+		XCTAssert(source.enabled == true)
+	}
+
 	func testDisposing() {
 		let source = ExecutorSource()
 

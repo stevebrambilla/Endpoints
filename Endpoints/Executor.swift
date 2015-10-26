@@ -24,6 +24,7 @@ import ReactiveCocoa
 public struct Executor<Payload> {
 	private let enabledEndpoint: Endpoint<Bool>?
 	private let trigger: Trigger<Payload>
+	private let afterEnabled: (Bool -> ())?
 
 	public init<T>(enabled: Endpoint<Bool>? = nil, trigger producer: SignalProducer<T, NoError>, transform: T -> Payload) {
 		self.init(enabled: enabled, trigger: .SignalProducer(producer), transform: transform)
@@ -41,16 +42,18 @@ public struct Executor<Payload> {
 		self.init(enabled: enabled, trigger: .Signal(signal))
 	}
 
-	// "Designated" initializer without transform.
-	private init(enabled: Endpoint<Bool>?, trigger: Trigger<Payload>) {
+	// "Designated" initializer without transform. Can supply `afterEnabled` closure.
+	private init(enabled: Endpoint<Bool>?, trigger: Trigger<Payload>, afterEnabled: (Bool -> ())? = nil) {
 		self.enabledEndpoint = enabled
 		self.trigger = trigger
+		self.afterEnabled = afterEnabled
 	}
 
 	// "Designated" initializer with transform.
 	private init<T>(enabled: Endpoint<Bool>?, trigger: Trigger<T>, transform: T -> Payload) {
 		self.enabledEndpoint = enabled
 		self.trigger = trigger.map(transform)
+		self.afterEnabled = nil
 	}
 
 	/// Maps each trigger payload from the Executor to a new value.
@@ -61,6 +64,12 @@ public struct Executor<Payload> {
 	/// Ignores all trigger payloads by sending Void instead.
 	public func ignorePayloads() -> Executor<Void> {
 		return mapPayloads { _ in () }
+	}
+
+	/// Injects side effects to be performed after the `enabled` Endpoint is
+	/// updated.
+	public func on(enabled enabled: Bool -> ()) -> Executor {
+		return Executor(enabled: enabledEndpoint, trigger: trigger, afterEnabled: enabled)
 	}
 
 	/// Binds `executor` to `action`, so the Action is executed whenever the
@@ -81,7 +90,9 @@ public struct Executor<Payload> {
 		let disposable = CompositeDisposable()
 
 		if let enabledEndpoint = enabledEndpoint {
-			disposable += enabledEndpoint.bind(action.enabled.producer)
+			disposable += enabledEndpoint
+				.on(after: afterEnabled)
+				.bind(action.enabled.producer)
 		}
 
 		disposable += trigger.observe { payload in
