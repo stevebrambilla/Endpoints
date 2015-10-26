@@ -73,4 +73,20 @@ class EndpointsTests: XCTestCase {
 		sendNext(sink, "second")
 		XCTAssert(addedDisposable.disposed == true, "Expected short circuit after sending second value")
 	}
+
+	func testOnCallbacks() {
+		let target = EndpointTarget()
+
+		var beforeValue: String?
+		var afterValue: String?
+
+		let textProducer = SignalProducer<String, NoError>(value: "Bound!")
+		disposable += target.textEndpoint
+			.on(before: { value in beforeValue = value }, after: { value in afterValue = value })
+			.bind(textProducer)
+
+		XCTAssert(target.text == "Bound!")
+		XCTAssert(beforeValue == "Bound!")
+		XCTAssert(afterValue == "Bound!")
+	}
 }

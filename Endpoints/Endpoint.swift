@@ -34,6 +34,8 @@ import Result
 public struct Endpoint<Value> {
 	private typealias Setter = () -> ()
 	private let generateSetter: Value -> Result<Setter, EndpointError>
+	private let before: (Value -> ())?
+	private let after: (Value -> ())?
 
 	public init<Target: AnyObject>(_ target: Target, writeValue: (Target, Value) -> ()) {
 		self.generateSetter = { [weak target] value in
@@ -41,6 +43,22 @@ public struct Endpoint<Value> {
 			let setter = { writeValue(strongTarget, value) } // Strongly captures the target
 			return Result(value: setter)
 		}
+
+		self.before = nil
+		self.after = nil
+	}
+
+	private init(generator: Value -> Result<Setter, EndpointError>, before: (Value -> ())?, after: (Value -> ())?) {
+		self.generateSetter = generator
+
+		self.before = before
+		self.after = after
+	}
+
+	/// Injects side effects to be performed either before or after setting the 
+	/// value. Execution is always on the main thread.
+	public func on(before before: (Value -> ())? = nil, after: (Value -> ())? = nil) -> Endpoint {
+		return Endpoint(generator: generateSetter, before: before, after: after)
 	}
 
 	/// Binds `producer` to `endpoint` and returns a Disposable that can be
@@ -51,11 +69,17 @@ public struct Endpoint<Value> {
 
 			// Create a Setter with the strongly captured target.
 			// If an error occurs (eg. target was zero'd), then the binding terminates.
-			.attemptMap(self.generateSetter)
+			.attemptMap { [generate = self.generateSetter] value in
+				return generate(value).map { setter in (value, setter) }
+			}
 
 			// Execute the setter on the UI thread.
 			.observeOn(UIScheduler())
-			.startWithNext { setter in setter() }
+			.startWithNext { [before = self.before, after = self.after] value, setter in
+				before?(value)
+				setter()
+				after?(value)
+			}
 	}
 }
 
