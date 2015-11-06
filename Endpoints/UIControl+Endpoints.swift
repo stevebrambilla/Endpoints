@@ -45,7 +45,7 @@ extension UIControl {
 	public func controlEventsProducer(events: UIControlEvents) -> SignalProducer<AnyObject, NoError> {
 		return SignalProducer { observer, disposable in
 			let target = ObjCTarget() { sender in
-				sendNext(observer, sender)
+				observer.sendNext(sender)
 			}
 
 			self.addTarget(target, action: target.selector, forControlEvents: events)

@@ -24,7 +24,7 @@ extension UIBarButtonItem {
 	public var triggerProducer: SignalProducer<UIBarButtonItem, NoError> {
 		let sourceEvents = SignalProducer<AnyObject, NoError> { observer, disposable in
 			let target = ObjCTarget() { sender in
-				sendNext(observer, sender)
+				observer.sendNext(sender)
 			}
 
 			self.target = target

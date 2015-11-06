@@ -54,8 +54,8 @@ extension UITextField {
 	public var textProducer: SignalProducer<String?, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<String?, NoError> { observer, _ in
-			sendNext(observer, self.text)
-			sendCompleted(observer)
+			observer.sendNext(self.text)
+			observer.sendCompleted()
 		}
 
 		let textChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
@@ -81,8 +81,8 @@ extension UITextField {
 	public var editingProducer: SignalProducer<Bool, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<Bool, NoError> { observer, _ in
-			sendNext(observer, self.editing)
-			sendCompleted(observer)
+			observer.sendNext(self.editing)
+			observer.sendCompleted()
 		}
 
 		let editingChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)

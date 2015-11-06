@@ -44,8 +44,8 @@ extension UISlider {
 	public var valueProducer: SignalProducer<Float, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<Float, NoError> { observer, _ in
-			sendNext(observer, self.value)
-			sendCompleted(observer)
+			observer.sendNext(self.value)
+			observer.sendCompleted()
 		}
 
 		let valueChanges = controlEventsProducer(.ValueChanged)

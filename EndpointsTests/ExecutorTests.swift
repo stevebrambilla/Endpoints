@@ -93,7 +93,7 @@ class ExecutorTests: XCTestCase {
 		source.trigger()
 		XCTAssert(source.enabled == false)
 
-		sendCompleted(observer)
+		observer.sendCompleted()
 		XCTAssert(source.enabled == true)
 	}
 
@@ -118,7 +118,7 @@ class ExecutorTests: XCTestCase {
 		XCTAssert(onEnabled == false)
 		XCTAssert(source.enabled == false)
 
-		sendCompleted(observer)
+		observer.sendCompleted()
 		XCTAssert(onEnabled == true)
 		XCTAssert(source.enabled == true)
 	}

@@ -42,9 +42,9 @@ class RACExtensionTests: XCTestCase {
 				tested = true
 			}
 
-		sendNext(observer, 2)
-		sendNext(observer, 3)
-		sendCompleted(observer)
+		observer.sendNext(2)
+		observer.sendNext(3)
+		observer.sendCompleted()
 
 		XCTAssert(tested)
 	}

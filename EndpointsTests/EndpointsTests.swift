@@ -42,35 +42,35 @@ class EndpointsTests: XCTestCase {
 		let textDisposable = target.textEndpoint <~ producer
 		XCTAssert(target.text == "")
 
-		sendNext(observer, "first")
+		observer.sendNext("first")
 		XCTAssert(target.text == "first")
 
 		textDisposable.dispose()
 
-		sendNext(observer, "second")
+		observer.sendNext("second")
 		XCTAssert(target.text == "first")
 	}
 
 	func testDisposesOnZeroedTarget() {
 		let addedDisposable = SimpleDisposable()
-		var sink: Signal<String, NoError>.Observer!
+		var signalObserver: Signal<String, NoError>.Observer!
 
 		let producer = SignalProducer<String, NoError>() { observer, disposable in
 			disposable.addDisposable(addedDisposable)
-			sink = observer
+			signalObserver = observer
 		}
 
 		var target: EndpointTarget? = EndpointTarget()
 		target!.textEndpoint <~ producer
 		XCTAssert(target!.text == "")
 
-		sendNext(sink, "first")
+		signalObserver.sendNext("first")
 		XCTAssert(target!.text == "first")
 
 		target = nil
 		XCTAssert(addedDisposable.disposed == false)
 
-		sendNext(sink, "second")
+		signalObserver.sendNext("second")
 		XCTAssert(addedDisposable.disposed == true, "Expected short circuit after sending second value")
 	}
 

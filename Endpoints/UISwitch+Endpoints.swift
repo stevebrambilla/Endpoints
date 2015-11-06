@@ -44,8 +44,8 @@ extension UISwitch {
 	public var onProducer: SignalProducer<Bool, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<Bool, NoError> { observer, _ in
-			sendNext(observer, self.on)
-			sendCompleted(observer)
+			observer.sendNext(self.on)
+			observer.sendCompleted()
 		}
 
 		let onChanges = controlEventsProducer(UIControlEvents.ValueChanged)

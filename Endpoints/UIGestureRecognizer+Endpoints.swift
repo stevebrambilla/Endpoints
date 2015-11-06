@@ -34,7 +34,7 @@ extension UIGestureRecognizer {
 		return SignalProducer { observer, disposable in
 			let target = ObjCTarget() { target in
 				guard let gestureRecognizer = target as? UIGestureRecognizer else { return }
-				sendNext(observer, gestureRecognizer)
+				observer.sendNext(gestureRecognizer)
 			}
 
 			self.addTarget(target, action: target.selector)

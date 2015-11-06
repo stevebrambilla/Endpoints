@@ -65,8 +65,8 @@ extension UITextView {
 	public var textProducer: SignalProducer<String, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<String, NoError> { observer, _ in
-			sendNext(observer, self.text)
-			sendCompleted(observer)
+			observer.sendNext(self.text)
+			observer.sendCompleted()
 		}
 
 		let notificationCenter = NSNotificationCenter.defaultCenter()
