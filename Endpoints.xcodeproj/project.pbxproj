@@ -61,6 +61,8 @@
 		AAE2816A1BB8BCA90080E8B7 /* UIView+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5721C11B33B11800685487 /* UIView+Endpoints.swift */; };
 		AAE2816B1BB8BCAE0080E8B7 /* SignalProducer+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5721CE1B33B13900685487 /* SignalProducer+Endpoints.swift */; };
 		AAE2816C1BB8BCAE0080E8B7 /* Signal+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA79FD21B35C5D900628BD2 /* Signal+Endpoints.swift */; };
+		AAFB3EAC1C02868400064A73 /* NSNotificationCenter+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB3EAB1C02868400064A73 /* NSNotificationCenter+Endpoints.swift */; };
+		AAFB3EAD1C02868400064A73 /* NSNotificationCenter+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB3EAB1C02868400064A73 /* NSNotificationCenter+Endpoints.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +132,7 @@
 		AAE281531BB8BC540080E8B7 /* Endpoints.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Endpoints.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAE281551BB8BC540080E8B7 /* Endpoints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Endpoints.h; sourceTree = "<group>"; };
 		AAE281571BB8BC540080E8B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AAFB3EAB1C02868400064A73 /* NSNotificationCenter+Endpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSNotificationCenter+Endpoints.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +194,7 @@
 				AA5721B21B33B10400685487 /* Endpoint.swift */,
 				AAA79FBF1B34F75600628BD2 /* Executor.swift */,
 				AA5721B31B33B10400685487 /* ObjCTarget.swift */,
+				AAFB3EAA1C02866600064A73 /* Foundation Extensions */,
 				AA5721A71B33AAD200685487 /* UIKit Extensions */,
 				AA5721A81B33AAEF00685487 /* RAC Extensions */,
 				AA5721721B33A8F300685487 /* Endpoints.h */,
@@ -307,6 +311,14 @@
 				AAE281571BB8BC540080E8B7 /* Info.plist */,
 			);
 			path = Endpoints;
+			sourceTree = "<group>";
+		};
+		AAFB3EAA1C02866600064A73 /* Foundation Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AAFB3EAB1C02868400064A73 /* NSNotificationCenter+Endpoints.swift */,
+			);
+			name = "Foundation Extensions";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -490,6 +502,7 @@
 				AA5721B51B33B10400685487 /* ObjCTarget.swift in Sources */,
 				AA5721CC1B33B11800685487 /* UITextView+Endpoints.swift in Sources */,
 				AAA79FD31B35C5D900628BD2 /* Signal+Endpoints.swift in Sources */,
+				AAFB3EAC1C02868400064A73 /* NSNotificationCenter+Endpoints.swift in Sources */,
 				AA5721C51B33B11800685487 /* UIControl+Endpoints.swift in Sources */,
 				AA5721C41B33B11800685487 /* UIButton+Endpoints.swift in Sources */,
 				AA5721C71B33B11800685487 /* UILabel+Endpoints.swift in Sources */,
@@ -524,6 +537,7 @@
 				AAE281651BB8BCA90080E8B7 /* UIImageView+Endpoints.swift in Sources */,
 				AAE281601BB8BCA90080E8B7 /* UIActivityIndicatorView+Endpoints.swift in Sources */,
 				AAE281661BB8BCA90080E8B7 /* UILabel+Endpoints.swift in Sources */,
+				AAFB3EAD1C02868400064A73 /* NSNotificationCenter+Endpoints.swift in Sources */,
 				AA8BF79D1BD99738000279FF /* UIGestureRecognizer+Endpoints.swift in Sources */,
 				AAE281631BB8BCA90080E8B7 /* UIButton+Endpoints.swift in Sources */,
 				AAE2815E1BB8BCA30080E8B7 /* Executor.swift in Sources */,
