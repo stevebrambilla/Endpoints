@@ -15,13 +15,13 @@ import ReactiveCocoa
 extension UITextField {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextField`'s `text`
 	/// value.
-	public var textEndpoint: Endpoint<String> {
+	public var textEndpoint: Endpoint<String?> {
 		return Endpoint(self) { $0.text = $1 }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextField`'s
 	/// `attributedText` value.
-	public var attributedTextEndpoint: Endpoint<NSAttributedString> {
+	public var attributedTextEndpoint: Endpoint<NSAttributedString?> {
 		return Endpoint(self) { $0.attributedText = $1 }
 	}
 

@@ -14,13 +14,13 @@ import UIKit
 extension UIImageView {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIImageView`'s `image`
 	/// value.
-	public var imageEndpoint: Endpoint<UIImage> {
+	public var imageEndpoint: Endpoint<UIImage?> {
 		return Endpoint(self) { $0.image = $1 }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIImageView`'s 
 	/// `highlightedImage` value.
-	public var highlightedImageEndpoint: Endpoint<UIImage> {
+	public var highlightedImageEndpoint: Endpoint<UIImage?> {
 		return Endpoint(self) { $0.highlightedImage = $1 }
 	}
 

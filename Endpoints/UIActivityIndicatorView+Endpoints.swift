@@ -28,7 +28,7 @@ extension UIActivityIndicatorView {
 
 	/// An `Endpoint` to bind a `SignalProducer` to the 
 	/// `UIActivityIndicatorView`'s `color` value.
-	public var colorEndpoint: Endpoint<UIColor> {
+	public var colorEndpoint: Endpoint<UIColor?> {
 		return Endpoint(self) { $0.color = $1 }
 	}
 }
