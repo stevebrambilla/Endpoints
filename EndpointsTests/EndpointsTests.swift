@@ -39,7 +39,7 @@ class EndpointsTests: XCTestCase {
 		let (producer, observer) = SignalProducer<String, NoError>.buffer()
 
 		let target = EndpointTarget()
-		let textDisposable = target.textEndpoint <~ producer
+		let textDisposable = target.textEndpoint.bind(producer)
 		XCTAssert(target.text == "")
 
 		observer.sendNext("first")
@@ -61,7 +61,7 @@ class EndpointsTests: XCTestCase {
 		}
 
 		var target: EndpointTarget? = EndpointTarget()
-		target!.textEndpoint <~ producer
+		target!.textEndpoint.bind(producer)
 		XCTAssert(target!.text == "")
 
 		signalObserver.sendNext("first")

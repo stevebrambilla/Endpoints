@@ -9,6 +9,14 @@
 import Foundation
 import ReactiveCocoa
 
+extension SignalType where Error == NoError {
+	/// Binds the signal to `endpoint` and returns a Disposable that can be used
+ 	/// to cancel the binding.
+	public func bindTo(endpoint: Endpoint<Value>) -> Disposable {
+		return endpoint.bind(signal)
+	}
+}
+
 extension SignalProducerType where Error == NoError {
 	/// Binds the signal producer to `endpoint` and returns a Disposable that
 	/// can be used to cancel the binding.

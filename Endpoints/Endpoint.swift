@@ -61,7 +61,18 @@ public struct Endpoint<Value> {
 		return Endpoint(generator: generateSetter, before: before, after: after)
 	}
 
-	/// Binds `producer` to `endpoint` and returns a Disposable that can be
+	/// Binds `signal` to the endpoint and returns the Disposable that can be
+	/// used to cancel the binding.
+	public func bind(signal: Signal<Value, NoError>) -> Disposable {
+		// Create a signal producer from the signal and bind to it.
+		let producer = SignalProducer { observer, disposable in
+			disposable += signal.observe(observer)
+		}
+
+		return bind(producer)
+	}
+
+	/// Binds `producer` to the endpoint and returns a Disposable that can be
 	/// used to cancel the binding.
 	public func bind(producer: SignalProducer<Value, NoError>) -> Disposable {
 		return producer
