@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# Bootstraps the dependencies for this project.
+
+cd "$(dirname "$0")/.."
+
+set -e
+
+PROJECT_DISPLAY_NAME="Endpoints"
+
+main () {
+	check_deps
+
+	bootstrap
+}
+
+check_deps () {
+	echo "--- [$PROJECT_DISPLAY_NAME] Checking bootstrap dependencies"
+	if hash carthage 2>/dev/null; then
+		echo "  ✓ Carthage $(carthage version) installed."
+	else
+		echo "  ✗ Carthage must be installed."
+		echo "  Install the latest release from: https://github.com/Carthage/Carthage/releases"
+		exit 1
+	fi
+}
+
+bootstrap () {
+	echo "--- [$PROJECT_DISPLAY_NAME] Bootstrapping dependencies"
+
+	carthage bootstrap --no-build
+}
+
+main

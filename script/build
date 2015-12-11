@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# Builds the framework.
+#
+# This script assumes the project has already been bootstrapped, if not, run
+# script/bootstrap first.
+
+cd "$(dirname "$0")/.."
+
+source script/xcode_functions.sh
+set -e
+
+PROJECT_DISPLAY_NAME="Endpoints"
+
+XCODE_PROJECT="Endpoints.xcodeproj"
+
+main () {
+	build "Endpoints-iOS"
+	build "Endpoints-tvOS"
+}
+
+build () {
+	local scheme=$1
+
+	echo "--- [$PROJECT_DISPLAY_NAME] Cleaning and building $scheme"
+
+	xcaction clean "$XCODE_PROJECT" "$scheme"
+	xcaction build "$XCODE_PROJECT" "$scheme"
+}
+
+main $1
