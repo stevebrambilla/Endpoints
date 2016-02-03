@@ -19,7 +19,7 @@ class ExecutorSource {
 		let enabled = Endpoint(self) { $0.enabled = $1 }
 
 		let producer = SignalProducer { observer, _ in
-			eventSignal.observe(observer)
+			self.eventSignal.observe(observer)
 		}
 
 		return Executor(enabled: enabled, trigger: producer)
@@ -27,7 +27,7 @@ class ExecutorSource {
 
 	private var count = 0
 	func trigger() {
-		sendNext(eventObserver, count)
+		eventObserver.sendNext(count)
 		count++
 	}
 }

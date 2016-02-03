@@ -35,20 +35,17 @@ extension UISwitch {
 	/// Returns a signal producer that sends the `on` each time the value is
 	/// changed.
 	///
-	/// Note that the `UISwitch` is weakly referenced by the `SignalProducer`.
-	/// If the `UISwitch` is deallocated before the signal producer is started
-	/// it will complete immediately. Otherwise this producer will not terminate
-	/// naturally, so it must be explicitly disposed to avoid leaks.
+	/// Note that the `UISlider` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	///
 	/// The current value of `on` is sent immediately upon starting the signal
 	/// producer.
 	public var onProducer: SignalProducer<Bool, NoError> {
 		// Current value lookup deferred until producer is started.
-		let currentValue = SignalProducer<Bool, NoError> { [weak self] observer, _ in
-			if let theSwitch = self {
-				sendNext(observer, theSwitch.on)
-			}
-			sendCompleted(observer)
+		let currentValue = SignalProducer<Bool, NoError> { observer, _ in
+			observer.sendNext(self.on)
+			observer.sendCompleted()
 		}
 
 		let onChanges = controlEventsProducer(UIControlEvents.ValueChanged)

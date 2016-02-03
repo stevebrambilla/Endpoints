@@ -2,8 +2,8 @@
 //  Endpoints.h
 //  Endpoints
 //
-//  Created by Steve Brambilla on 2015-06-18.
-//  Copyright (c) 2015 Steve Brambilla. All rights reserved.
+//  Created by Steve Brambilla on 2015-09-27.
+//  Copyright © 2015 Steve Brambilla. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

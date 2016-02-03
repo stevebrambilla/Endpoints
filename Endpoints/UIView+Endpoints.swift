@@ -20,7 +20,7 @@ extension UIView {
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIView`'s 
 	/// `backgroundColor` value.
-	public var backgroundColorEndpoint: Endpoint<UIColor> {
+	public var backgroundColorEndpoint: Endpoint<UIColor?> {
 		return Endpoint(self) { $0.backgroundColor = $1 }
 	}
 

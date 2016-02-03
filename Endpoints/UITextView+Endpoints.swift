@@ -12,22 +12,27 @@ import ReactiveCocoa
 // ----------------------------------------------------------------------------
 // MARK: - Endpoints
 
+// Endpoints that are available for iOS, but not for tvOS.
+#if os(iOS)
 extension UITextView {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextView`'s
 	/// `editable` value.
 	public var editableEndpoint: Endpoint<Bool> {
 		return Endpoint(self) { $0.editable = $1 }
 	}
+}
+#endif
 
+extension UITextView {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextView`'s `text`
 	/// value.
-	public var textEndpoint: Endpoint<String> {
+	public var textEndpoint: Endpoint<String?> {
 		return Endpoint(self) { $0.text = $1 }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextView`'s
 	/// `attributedText` value.
-	public var attributedTextEndpoint: Endpoint<NSAttributedString> {
+	public var attributedTextEndpoint: Endpoint<NSAttributedString?> {
 		return Endpoint(self) { $0.attributedText = $1 }
 	}
 
@@ -51,20 +56,17 @@ extension UITextView {
 	/// Returns a signal producer that sends the `text` value each time it is
 	/// changed.
 	///
-	/// Note that the `UITextView` is weakly referenced by the `SignalProducer`.
-	/// If the `UITextView` is deallocated before the signal producer is started
-	/// it will complete immediately. Otherwise this producer will not terminate
-	/// naturally, so it must be explicitly disposed to avoid leaks.
+	/// Note that the `UITextView` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	///
 	/// The current value of `text` is sent immediately upon starting the signal
 	/// producer.
 	public var textProducer: SignalProducer<String, NoError> {
 		// Current value lookup deferred until producer is started.
-		let currentValue = SignalProducer<String, NoError> { [weak self] observer, _ in
-			if let textView = self {
-				sendNext(observer, textView.text)
-			}
-			sendCompleted(observer)
+		let currentValue = SignalProducer<String, NoError> { observer, _ in
+			observer.sendNext(self.text)
+			observer.sendCompleted()
 		}
 
 		let notificationCenter = NSNotificationCenter.defaultCenter()

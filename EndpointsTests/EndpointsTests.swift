@@ -36,41 +36,57 @@ class EndpointsTests: XCTestCase {
 	}
 
 	func testDisposing() {
-		let (producer, observer) = SignalProducer<String, NoError>.buffer()
+		let (producer, observer) = SignalProducer<String, NoError>.buffer(1)
 
 		let target = EndpointTarget()
-		let textDisposable = target.textEndpoint <~ producer
+		let textDisposable = target.textEndpoint.bind(producer)
 		XCTAssert(target.text == "")
 
-		sendNext(observer, "first")
+		observer.sendNext("first")
 		XCTAssert(target.text == "first")
 
 		textDisposable.dispose()
 
-		sendNext(observer, "second")
+		observer.sendNext("second")
 		XCTAssert(target.text == "first")
 	}
 
 	func testDisposesOnZeroedTarget() {
 		let addedDisposable = SimpleDisposable()
-		var sink: Signal<String, NoError>.Observer!
+		var signalObserver: Signal<String, NoError>.Observer!
 
 		let producer = SignalProducer<String, NoError>() { observer, disposable in
 			disposable.addDisposable(addedDisposable)
-			sink = observer
+			signalObserver = observer
 		}
 
 		var target: EndpointTarget? = EndpointTarget()
-		target!.textEndpoint <~ producer
+		target!.textEndpoint.bind(producer)
 		XCTAssert(target!.text == "")
 
-		sendNext(sink, "first")
+		signalObserver.sendNext("first")
 		XCTAssert(target!.text == "first")
 
 		target = nil
 		XCTAssert(addedDisposable.disposed == false)
 
-		sendNext(sink, "second")
+		signalObserver.sendNext("second")
 		XCTAssert(addedDisposable.disposed == true, "Expected short circuit after sending second value")
+	}
+
+	func testOnCallbacks() {
+		let target = EndpointTarget()
+
+		var beforeValue: String?
+		var afterValue: String?
+
+		let textProducer = SignalProducer<String, NoError>(value: "Bound!")
+		disposable += target.textEndpoint
+			.on(before: { value in beforeValue = value }, after: { value in afterValue = value })
+			.bind(textProducer)
+
+		XCTAssert(target.text == "Bound!")
+		XCTAssert(beforeValue == "Bound!")
+		XCTAssert(afterValue == "Bound!")
 	}
 }

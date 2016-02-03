@@ -39,24 +39,19 @@ extension UIControl {
 	/// Returns a signal producer that sends the `sender` each time an action
 	/// message is sent for any of the `events`.
 	///
-	/// Note that the `UIControl` is weakly referenced by the `SignalProducer`.
-	/// If the `UIControl` is deallocated before the signal producer is started
-	/// it will complete immediately. Otherwise this producer will not terminate
-	/// naturally, so it must be explicitly disposed to avoid leaks.
+	/// Note that the `UIControl` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	public func controlEventsProducer(events: UIControlEvents) -> SignalProducer<AnyObject, NoError> {
-		return SignalProducer { [weak self] observer, disposable in
+		return SignalProducer { observer, disposable in
 			let target = ObjCTarget() { sender in
-				sendNext(observer, sender)
+				observer.sendNext(sender)
 			}
 
-			if let control = self {
-				control.addTarget(target, action: target.selector, forControlEvents: events)
+			self.addTarget(target, action: target.selector, forControlEvents: events)
 
-				disposable.addDisposable {
-					self?.removeTarget(target, action: target.selector, forControlEvents: events)
-				}
-			} else {
-				sendCompleted(observer)
+			disposable.addDisposable {
+				self.removeTarget(target, action: target.selector, forControlEvents: events)
 			}
 		}
 	}

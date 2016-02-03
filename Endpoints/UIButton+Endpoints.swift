@@ -27,25 +27,25 @@ extension UIButton {
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIButton`'s `title`
 	/// value for the Normal control state.
-	public var titleEndpoint: Endpoint<String> {
+	public var titleEndpoint: Endpoint<String?> {
 		return Endpoint(self) { $0.setTitle($1, forState: .Normal) }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIButton`'s
 	/// `attributedTitle` value for the Normal control state.
-	public var attributedTitleEndpoint: Endpoint<NSAttributedString> {
+	public var attributedTitleEndpoint: Endpoint<NSAttributedString?> {
 		return Endpoint(self) { $0.setAttributedTitle($1, forState: .Normal) }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIButton`'s `image` 
 	/// value for the Normal control state.
-	public var imageEndpoint: Endpoint<UIImage> {
+	public var imageEndpoint: Endpoint<UIImage?> {
 		return Endpoint(self) { $0.setImage($1, forState: .Normal) }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIButton`'s
 	/// `backgroundImage` value for the Normal control state.
-	public var backgroundImageEndpoint: Endpoint<UIImage> {
+	public var backgroundImageEndpoint: Endpoint<UIImage?> {
 		return Endpoint(self) { $0.setBackgroundImage($1, forState: .Normal) }
 	}
 }

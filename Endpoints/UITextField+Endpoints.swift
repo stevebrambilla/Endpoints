@@ -15,13 +15,13 @@ import ReactiveCocoa
 extension UITextField {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextField`'s `text`
 	/// value.
-	public var textEndpoint: Endpoint<String> {
+	public var textEndpoint: Endpoint<String?> {
 		return Endpoint(self) { $0.text = $1 }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextField`'s
 	/// `attributedText` value.
-	public var attributedTextEndpoint: Endpoint<NSAttributedString> {
+	public var attributedTextEndpoint: Endpoint<NSAttributedString?> {
 		return Endpoint(self) { $0.attributedText = $1 }
 	}
 
@@ -45,21 +45,17 @@ extension UITextField {
 	/// Returns a signal producer that sends the `text` value each time it is
 	/// changed.
 	///
-	/// Note that the `UITextField` is weakly referenced by the
-	/// `SignalProducer`. If the `UITextField` is deallocated before the signal
-	/// producer is started it will complete immediately. Otherwise this
-	/// producer will not terminate naturally, so it must be explicitly disposed
-	/// to avoid leaks.
+	/// Note that the `UITextField` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	///
 	/// The current value of `text` is sent immediately upon starting the signal
 	/// producer.
 	public var textProducer: SignalProducer<String?, NoError> {
 		// Current value lookup deferred until producer is started.
-		let currentValue = SignalProducer<String?, NoError> { [weak self] observer, _ in
-			if let textField = self {
-				sendNext(observer, textField.text)
-			}
-			sendCompleted(observer)
+		let currentValue = SignalProducer<String?, NoError> { observer, _ in
+			observer.sendNext(self.text)
+			observer.sendCompleted()
 		}
 
 		let textChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
@@ -76,21 +72,17 @@ extension UITextField {
 	/// Returns a signal producer that sends the `editing` value each time an
 	/// editing event is sent.
 	///
-	/// Note that the `UITextField` is weakly referenced by the
-	/// `SignalProducer`. If the `UITextField` is deallocated before the signal
-	/// producer is started it will complete immediately. Otherwise this
-	/// producer will not terminate naturally, so it must be explicitly disposed
-	/// to avoid leaks.
+	/// Note that the `UITextField` is strongly referenced by the
+	/// `SignalProducer`. This producer will not terminate naturally, so it must
+	/// be disposed or interrupted to avoid leaks.
 	///
 	/// The current value of `editing` is sent immediately upon starting the
 	/// signal producer.
 	public var editingProducer: SignalProducer<Bool, NoError> {
 		// Current value lookup deferred until producer is started.
-		let currentValue = SignalProducer<Bool, NoError> { [weak self] observer, _ in
-			if let textField = self {
-				sendNext(observer, textField.editing)
-			}
-			sendCompleted(observer)
+		let currentValue = SignalProducer<Bool, NoError> { observer, _ in
+			observer.sendNext(self.editing)
+			observer.sendCompleted()
 		}
 
 		let editingChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)

@@ -15,7 +15,7 @@ extension SignalType {
 	/// started.
 	public func withInitialValue(initialValue: Value) -> SignalProducer<Value, Error> {
 		return SignalProducer { observer, disposable in
-			sendNext(observer, initialValue)
+			observer.sendNext(initialValue)
 			disposable += self.signal.observe(observer)
 		}
 	}
