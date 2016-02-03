@@ -36,7 +36,7 @@ class EndpointsTests: XCTestCase {
 	}
 
 	func testDisposing() {
-		let (producer, observer) = SignalProducer<String, NoError>.buffer()
+		let (producer, observer) = SignalProducer<String, NoError>.buffer(1)
 
 		let target = EndpointTarget()
 		let textDisposable = target.textEndpoint.bind(producer)
