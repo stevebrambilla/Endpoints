@@ -17,7 +17,7 @@ internal class ObjCTarget: NSObject {
 	}
 
 	internal var selector: Selector {
-		return "invoke:"
+		return #selector(ObjCTarget.invoke(_:))
 	}
 
 	internal func dispose() {

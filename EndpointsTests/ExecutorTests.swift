@@ -30,7 +30,7 @@ class ExecutorTests: XCTestCase {
 		}
 
 		var count = 0
-		action.values.observeNext { _ in count++ }
+		action.values.observeNext { _ in count += 1 }
 
 		disposable += source.executor.bindTo(action)
 		XCTAssert(count == 0)
@@ -67,7 +67,7 @@ class ExecutorTests: XCTestCase {
 		}
 
 		var count = 0
-		action.values.observeNext { _ in count++ }
+		action.values.observeNext { _ in count += 1 }
 
 		disposable += source.executor.bindTo(action)
 		XCTAssert(count == 0)
@@ -131,7 +131,7 @@ class ExecutorTests: XCTestCase {
 		}
 
 		var count = 0
-		action.values.observeNext { _ in count++ }
+		action.values.observeNext { _ in count += 1 }
 
 		let actionDisposable = source.executor.bindTo(action)
 		XCTAssert(count == 0)

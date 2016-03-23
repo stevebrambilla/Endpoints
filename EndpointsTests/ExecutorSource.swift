@@ -28,6 +28,6 @@ class ExecutorSource {
 	private var count = 0
 	func trigger() {
 		eventObserver.sendNext(count)
-		count++
+		count += 1
 	}
 }
