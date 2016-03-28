@@ -9,6 +9,7 @@
 import Foundation
 import Endpoints
 import ReactiveCocoa
+import Result
 
 class ExecutorSource {
 	private(set) var enabled = false

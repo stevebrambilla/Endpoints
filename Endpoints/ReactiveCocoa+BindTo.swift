@@ -8,6 +8,7 @@
 
 import Foundation
 import ReactiveCocoa
+import Result
 
 extension SignalType where Error == NoError {
 	/// Binds the signal to `endpoint` and returns a Disposable that can be used

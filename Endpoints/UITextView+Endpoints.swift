@@ -8,6 +8,7 @@
 
 import UIKit
 import ReactiveCocoa
+import Result
 
 // ----------------------------------------------------------------------------
 // MARK: - Endpoints

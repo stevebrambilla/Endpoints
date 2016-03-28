@@ -8,6 +8,7 @@
 
 import Foundation
 import ReactiveCocoa
+import Result
 
 // ----------------------------------------------------------------------------
 // MARK: - Signal Producer

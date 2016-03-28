@@ -10,6 +10,7 @@ import UIKit
 import XCTest
 import Endpoints
 import ReactiveCocoa
+import Result
 
 class EndpointsTests: XCTestCase {
 	var disposable: CompositeDisposable!

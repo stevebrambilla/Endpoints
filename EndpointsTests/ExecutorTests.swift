@@ -10,6 +10,7 @@ import Foundation
 import XCTest
 import Endpoints
 import ReactiveCocoa
+import Result
 
 class ExecutorTests: XCTestCase {
 	var disposable: CompositeDisposable!
