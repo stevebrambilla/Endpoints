@@ -8,6 +8,9 @@ set -e
 
 PROJECT_DISPLAY_NAME="Endpoints"
 
+# Platforms match the Xcode project's target platforms.
+PLATFORM="iOS,tvOS"
+
 main () {
 	check_deps
 
@@ -28,7 +31,7 @@ check_deps () {
 bootstrap () {
 	echo "--- [$PROJECT_DISPLAY_NAME] Bootstrapping dependencies"
 
-	carthage bootstrap --no-build
+	carthage bootstrap --platform $PLATFORM
 }
 
 main

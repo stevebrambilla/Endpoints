@@ -80,6 +80,8 @@ class ExecutorTests: XCTestCase {
 		XCTAssert(count == 2)
 	}
 
+
+/*
 	func testEnabledBinding() {
 		let source = ExecutorSource()
 
@@ -123,6 +125,7 @@ class ExecutorTests: XCTestCase {
 		XCTAssert(onEnabled == true)
 		XCTAssert(source.enabled == true)
 	}
+*/
 
 	func testDisposing() {
 		let source = ExecutorSource()
