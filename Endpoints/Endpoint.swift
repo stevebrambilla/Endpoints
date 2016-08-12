@@ -86,7 +86,9 @@ public struct Endpoint<Value> {
 
 			// Execute the setter on the UI thread.
 			.observeOn(UIScheduler())
-			.startWithNext { [before = self.before, after = self.after] value, setter in
+			.startWithResult { [before = self.before, after = self.after] result in
+				guard let (value, setter) = result.value else { return }
+
 				before?(value)
 				setter()
 				after?(value)
