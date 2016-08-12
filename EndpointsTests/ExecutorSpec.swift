@@ -84,9 +84,9 @@ class ExecutorSpec: QuickSpec {
 			it("should bind the enabled value") {
 				let source = ExecutorSource()
 
-				let (producer, observer) = SignalProducer<Int, NoError>.buffer(1)
-				let action = Action<Int, Int, NoError> { x in
-					return producer
+				let (signal, observer) = Signal<Int, NoError>.pipe()
+				let action = Action<Int, Int, NoError> { _ in
+					return SignalProducer(signal: signal)
 				}
 
 				disposable += source.executor.bindTo(action)
@@ -104,9 +104,9 @@ class ExecutorSpec: QuickSpec {
 			it("should execute the 'on' callback") {
 				let source = ExecutorSource()
 
-				let (producer, observer) = SignalProducer<Int, NoError>.buffer(1)
-				let action = Action<Int, Int, NoError> { x in
-					return producer
+				let (signal, observer) = Signal<Int, NoError>.pipe()
+				let action = Action<Int, Int, NoError> { _ in
+					return SignalProducer(signal: signal)
 				}
 
 				var onEnabled: Bool?
