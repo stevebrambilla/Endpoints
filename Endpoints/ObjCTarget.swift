@@ -9,10 +9,10 @@
 import Foundation
 
 internal class ObjCTarget: NSObject {
-	fileprivate let callback: (AnyObject) -> ()
-	fileprivate var disposed = false
+	private let callback: (AnyObject) -> Void
+	private var disposed = false
 
-	internal init(callback: @escaping (AnyObject) -> ()) {
+	internal init(callback: @escaping (AnyObject) -> Void) {
 		self.callback = callback
 	}
 
@@ -24,7 +24,7 @@ internal class ObjCTarget: NSObject {
 		disposed = true
 	}
 
-	@objc fileprivate func invoke(_ sender: AnyObject) {
+	@objc private func invoke(_ sender: AnyObject) {
 		if !disposed {
 			callback(sender)
 		}

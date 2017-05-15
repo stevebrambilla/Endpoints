@@ -59,7 +59,7 @@ extension UITextField {
 			observer.sendCompleted()
 		}
 
-		let textChanges = controlEventsProducer(UIControlEvents.allEditingEvents)
+		let textChanges = controlEventsProducer(for: .allEditingEvents)
 			.map { sender -> String? in
 				guard let textField = sender as? UITextField else {
 					fatalError("Expected sender to be an instance of UITextField, got: \(sender).")
@@ -86,7 +86,7 @@ extension UITextField {
 			observer.sendCompleted()
 		}
 
-		let editingChanges = controlEventsProducer(UIControlEvents.allEditingEvents)
+		let editingChanges = controlEventsProducer(for: .allEditingEvents)
 			.map { sender -> Bool in
 				if let textField = sender as? UITextField {
 					return textField.isEditing

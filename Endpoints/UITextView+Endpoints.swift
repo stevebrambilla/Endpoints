@@ -70,8 +70,7 @@ extension UITextView {
 			observer.sendCompleted()
 		}
 
-		let notificationCenter = NotificationCenter.default
-		let textChanges = notificationCenter.notificationsProducerForName(name: NSNotification.Name.UITextViewTextDidChange)
+		let textChanges = NotificationCenter.default.notificationsProducer(forName: Notification.Name.UITextViewTextDidChange)
 			.map { notification -> String in
 				if let textView = notification.object as? UITextView {
 					return String(textView.text)
@@ -96,11 +95,9 @@ extension UITextView {
 	/// sent immediately upon starting the signal. If not `initialValue` is 
 	/// provided it defaults to `false`.
 	public func editingProducer(_ initialValue: Bool = false) -> SignalProducer<Bool, NoError> {
-		let notificationCenter = NotificationCenter.default
-		let beganEditing = notificationCenter.reactive.notifications(forName: NSNotification.Name.UITextViewTextDidBeginEditing, object: self).map { _ in true }
-		let endedEditing = notificationCenter.reactive.notifications(forName: NSNotification.Name.UITextViewTextDidEndEditing, object: self).map { _ in false }
-		let editingChanges = SignalProducer([beganEditing, endedEditing]).flatten(.merge)
-
+		let beganEditing = NotificationCenter.default.notificationsProducer(forName: Notification.Name.UITextViewTextDidBeginEditing, object: self).map { _ in true }
+		let endedEditing = NotificationCenter.default.notificationsProducer(forName: Notification.Name.UITextViewTextDidEndEditing, object: self).map { _ in false }
+		let editingChanges = SignalProducer.merge(beganEditing, endedEditing)
 		return SignalProducer(value: initialValue).concat(editingChanges)
 	}
 }

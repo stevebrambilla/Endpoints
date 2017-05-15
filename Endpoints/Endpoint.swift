@@ -18,24 +18,24 @@ import Result
 ///
 /// Signal producers can be bound to Endpoints using:
 /// 
-/// - `SignalProducer.bindTo(<endpoint>)`
-/// - `Property.bindTo(<endpoint>)`
-/// - `Endpoint.bind(<producer>)`
+/// - `SignalProducer.bind(to: <endpoint>)`
+/// - `Property.bind(to: <endpoint>)`
+/// - `Endpoint.bind(from: <producer>)`
 /// - The ReactiveSwift bind operator (`<~`)
 ///
 /// Endpoints are expected to be exposed by UI classes, so binding a signal
 /// producer guarantees that the setter is invoked on the main thread. 
-/// Therefore, it's not necessary to call `observeOn(UIScheduler())` on the 
+/// Therefore, it's not necessary to call `observe(on: UIScheduler())` on the
 /// bound signal producers.
 ///
 /// Endpoints keep a *weak* reference to their targets. If a value is sent to an
 /// endpoint whose target reference has been zero'd out, the binding will be
 /// terminated.
 public struct Endpoint<Value> {
-	fileprivate typealias Setter = () -> ()
-	fileprivate let generateSetter: (Value) -> Result<Setter, EndpointError>
-	fileprivate let before: ((Value) -> ())?
-	fileprivate let after: ((Value) -> ())?
+	private typealias Setter = () -> Void
+	private let generateSetter: (Value) -> Result<Setter, EndpointError>
+	private let before: ((Value) -> Void)?
+	private let after: ((Value) -> Void)?
 
 	public init<Target: AnyObject>(_ target: Target, writeValue: @escaping (Target, Value) -> ()) {
 		self.generateSetter = { [weak target] value in
@@ -48,7 +48,7 @@ public struct Endpoint<Value> {
 		self.after = nil
 	}
 
-	fileprivate init(generator: @escaping (Value) -> Result<Setter, EndpointError>, before: ((Value) -> ())?, after: ((Value) -> ())?) {
+	private init(generator: @escaping (Value) -> Result<Setter, EndpointError>, before: ((Value) -> Void)?, after: ((Value) -> Void)?) {
 		self.generateSetter = generator
 
 		self.before = before
@@ -57,25 +57,25 @@ public struct Endpoint<Value> {
 
 	/// Injects side effects to be performed either before or after setting the 
 	/// value. Execution is always on the main thread.
-	public func on(before: ((Value) -> ())? = nil, after: ((Value) -> ())? = nil) -> Endpoint {
+	public func on(before: ((Value) -> Void)? = nil, after: ((Value) -> Void)? = nil) -> Endpoint {
 		return Endpoint(generator: generateSetter, before: before, after: after)
 	}
 
 	/// Binds `signal` to the endpoint and returns the Disposable that can be
 	/// used to cancel the binding.
-	public func bind(_ signal: Signal<Value, NoError>) -> Disposable {
+	public func bind(from signal: Signal<Value, NoError>) -> Disposable {
 		// Create a signal producer from the signal and bind to it.
 		let producer = SignalProducer { observer, disposable in
 			disposable += signal.observe(observer)
 		}
 
-		return bind(producer)
+		return bind(from: producer)
 	}
 
 	/// Binds `producer` to the endpoint and returns a Disposable that can be
 	/// used to cancel the binding.
 	@discardableResult
-	public func bind(_ producer: SignalProducer<Value, NoError>) -> Disposable {
+	public func bind(from producer: SignalProducer<Value, NoError>) -> Disposable {
 		return producer
 			.promoteErrors(EndpointError.self)
 
@@ -107,11 +107,11 @@ private enum EndpointError: Error {
 /// Binds `producer` to `endpoint` and returns a Disposable that can be used
 /// to cancel the binding.
 public func <~ <T>(endpoint: Endpoint<T>, producer: SignalProducer<T, NoError>) -> Disposable {
-	return endpoint.bind(producer)
+	return endpoint.bind(from: producer)
 }
 
 /// Binds `property` to `endpoint` and returns a Disposable that can be used
 /// to cancel the binding.
 public func <~ <T, P: PropertyProtocol>(endpoint: Endpoint<T>, property: P) -> Disposable where P.Value == T {
-	return endpoint.bind(property.producer)
+	return endpoint.bind(from: property.producer)
 }

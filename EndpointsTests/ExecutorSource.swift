@@ -11,12 +11,12 @@ import Endpoints
 import ReactiveSwift
 import Result
 
-class ExecutorSource {
-	fileprivate(set) var enabled = false
+internal class ExecutorSource {
+	private(set) var enabled = false
 
-	let (eventSignal, eventObserver) = Signal<Int, NoError>.pipe()
+	internal let (eventSignal, eventObserver) = Signal<Int, NoError>.pipe()
 
-	var executor: Executor<Int> {
+	internal var executor: Executor<Int> {
 		let enabled = Endpoint(self) { $0.enabled = $1 }
 
 		let producer = SignalProducer { observer, _ in
@@ -26,8 +26,8 @@ class ExecutorSource {
 		return Executor(enabled: enabled, trigger: producer)
 	}
 
-	fileprivate var count = 0
-	func trigger() {
+	private var count = 0
+	internal func trigger() {
 		eventObserver.send(value: count)
 		count += 1
 	}

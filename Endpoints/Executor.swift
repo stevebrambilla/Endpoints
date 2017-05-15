@@ -18,14 +18,14 @@ import Result
 /// Executors also bind the `enabled` state of Actions to an Endpoint that is
 /// exposed by the executor's owner.
 ///
-/// Actions can be bound to Executors using the `bindTo()` method.
+/// Actions can be bound to Executors using the `bind(to:)` method.
 ///
 /// If the Executor's trigger `Payload` type doesn't match the Action's `Input`
 /// type, a transform function can be provided to map `Payloads` to `Inputs`.
 public struct Executor<Payload> {
-	fileprivate let enabledEndpoint: Endpoint<Bool>?
-	fileprivate let trigger: Trigger<Payload>
-	fileprivate let afterEnabled: ((Bool) -> ())?
+	private let enabledEndpoint: Endpoint<Bool>?
+	private let trigger: Trigger<Payload>
+	private let afterEnabled: ((Bool) -> Void)?
 
 	public init<T>(enabled: Endpoint<Bool>? = nil, trigger producer: SignalProducer<T, NoError>, transform: @escaping (T) -> Payload) {
 		self.init(enabled: enabled, trigger: .signalProducer(producer), transform: transform)
@@ -44,14 +44,14 @@ public struct Executor<Payload> {
 	}
 
 	// "Designated" initializer without transform. Can supply `afterEnabled` closure.
-	fileprivate init(enabled: Endpoint<Bool>?, trigger: Trigger<Payload>, afterEnabled: ((Bool) -> ())? = nil) {
+	private init(enabled: Endpoint<Bool>?, trigger: Trigger<Payload>, afterEnabled: ((Bool) -> Void)? = nil) {
 		self.enabledEndpoint = enabled
 		self.trigger = trigger
 		self.afterEnabled = afterEnabled
 	}
 
 	// "Designated" initializer with transform.
-	fileprivate init<T>(enabled: Endpoint<Bool>?, trigger: Trigger<T>, transform: @escaping (T) -> Payload) {
+	private init<T>(enabled: Endpoint<Bool>?, trigger: Trigger<T>, transform: @escaping (T) -> Payload) {
 		self.enabledEndpoint = enabled
 		self.trigger = trigger.map(transform)
 		self.afterEnabled = nil
@@ -69,7 +69,7 @@ public struct Executor<Payload> {
 
 	/// Injects side effects to be performed after the `enabled` Endpoint is
 	/// updated.
-	public func on(enabled: @escaping (Bool) -> ()) -> Executor {
+	public func on(enabled: @escaping (Bool) -> Void) -> Executor {
 		return Executor(enabled: enabledEndpoint, trigger: trigger, afterEnabled: enabled)
 	}
 
@@ -78,8 +78,8 @@ public struct Executor<Payload> {
 	/// input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
-	public func bindTo<Output, Error>(_ action: Action<Payload, Output, Error>) -> Disposable {
-		return bindTo(action, transform: { $0 })
+	public func bind<Output, Error>(to action: Action<Payload, Output, Error>) -> Disposable {
+		return bind(to: action, transform: { $0 })
 	}
 
 	/// Binds `executor` to `action`, so the Action is executed whenever the
@@ -87,13 +87,13 @@ public struct Executor<Payload> {
 	/// by applying `transform` before being used as the input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
-	public func bindTo<Input, Output, Error>(_ action: Action<Input, Output, Error>, transform: @escaping (Payload) -> Input) -> Disposable {
+	public func bind<Input, Output, Error>(to action: Action<Input, Output, Error>, transform: @escaping (Payload) -> Input) -> Disposable {
 		let disposable = CompositeDisposable()
 
 		if let enabledEndpoint = enabledEndpoint {
 			disposable += enabledEndpoint
 				.on(after: afterEnabled)
-				.bind(action.isEnabled.producer)
+				.bind(from: action.isEnabled.producer)
 		}
 
 		disposable += trigger.observe { payload in
@@ -105,9 +105,9 @@ public struct Executor<Payload> {
 	}
 }
 
-private enum Trigger<Payload> {
-	case signal(ReactiveSwift.Signal<Payload, NoError>)
-	case signalProducer(ReactiveSwift.SignalProducer<Payload, NoError>)
+fileprivate enum Trigger<Payload> {
+	case signal(Signal<Payload, NoError>)
+	case signalProducer(SignalProducer<Payload, NoError>)
 
 	fileprivate func map<U>(_ transform: @escaping (Payload) -> U) -> Trigger<U> {
 		switch self {
@@ -119,13 +119,13 @@ private enum Trigger<Payload> {
 		}
 	}
 
-	fileprivate func observe(_ next: @escaping (Payload) -> ()) -> Disposable? {
+	fileprivate func observe(payload: @escaping (Payload) -> Void) -> Disposable? {
 		switch self {
 		case let .signal(signal):
-			return signal.observeValues { next($0) }
+			return signal.observeValues { payload($0) }
 
 		case let .signalProducer(producer):
-			return producer.startWithValues { next($0) }
+			return producer.startWithValues { payload($0) }
 		}
 	}
 }

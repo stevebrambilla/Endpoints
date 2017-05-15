@@ -31,8 +31,8 @@
 		AA848CE71D5E0DAD00AC6FBB /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CD81D5E0B6B00AC6FBB /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA848CF31D5E280400AC6FBB /* ExecutorSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA848CF21D5E280400AC6FBB /* ExecutorSpec.swift */; };
 		AA848CF51D5E34B400AC6FBB /* EndpointSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA848CF41D5E34B400AC6FBB /* EndpointSpec.swift */; };
-		AA8BF79A1BD99393000279FF /* ReactiveCocoa+BindTo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8BF7991BD99393000279FF /* ReactiveCocoa+BindTo.swift */; };
-		AA8BF79B1BD99393000279FF /* ReactiveCocoa+BindTo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8BF7991BD99393000279FF /* ReactiveCocoa+BindTo.swift */; };
+		AA8BF79A1BD99393000279FF /* ReactiveSwift+Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8BF7991BD99393000279FF /* ReactiveSwift+Binding.swift */; };
+		AA8BF79B1BD99393000279FF /* ReactiveSwift+Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8BF7991BD99393000279FF /* ReactiveSwift+Binding.swift */; };
 		AA8BF79D1BD99738000279FF /* UIGestureRecognizer+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9295011BD86D9B00E4AC32 /* UIGestureRecognizer+Endpoints.swift */; };
 		AA9295021BD86D9B00E4AC32 /* UIGestureRecognizer+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9295011BD86D9B00E4AC32 /* UIGestureRecognizer+Endpoints.swift */; };
 		AAA79FC01B34F75600628BD2 /* Executor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA79FBF1B34F75600628BD2 /* Executor.swift */; };
@@ -126,7 +126,7 @@
 		AA848CE91D5E27A300AC6FBB /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/tvOS/Quick.framework; sourceTree = "<group>"; };
 		AA848CF21D5E280400AC6FBB /* ExecutorSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutorSpec.swift; sourceTree = "<group>"; };
 		AA848CF41D5E34B400AC6FBB /* EndpointSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointSpec.swift; sourceTree = "<group>"; };
-		AA8BF7991BD99393000279FF /* ReactiveCocoa+BindTo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ReactiveCocoa+BindTo.swift"; sourceTree = "<group>"; };
+		AA8BF7991BD99393000279FF /* ReactiveSwift+Binding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ReactiveSwift+Binding.swift"; sourceTree = "<group>"; };
 		AA9295011BD86D9B00E4AC32 /* UIGestureRecognizer+Endpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIGestureRecognizer+Endpoints.swift"; sourceTree = "<group>"; };
 		AAA79FBF1B34F75600628BD2 /* Executor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Executor.swift; sourceTree = "<group>"; };
 		AAA79FC31B34FDAC00628BD2 /* ExecutorSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutorSource.swift; sourceTree = "<group>"; };
@@ -208,7 +208,7 @@
 				AA5721B31B33B10400685487 /* ObjCTarget.swift */,
 				AAFB3EAA1C02866600064A73 /* Foundation Extensions */,
 				AA5721A71B33AAD200685487 /* UIKit Extensions */,
-				AA5721A81B33AAEF00685487 /* RAC Extensions */,
+				AA5721A81B33AAEF00685487 /* RAS Extensions */,
 				AA5721721B33A8F300685487 /* Endpoints.h */,
 				AA5721701B33A8F300685487 /* Supporting Files */,
 			);
@@ -264,14 +264,14 @@
 			name = "UIKit Extensions";
 			sourceTree = "<group>";
 		};
-		AA5721A81B33AAEF00685487 /* RAC Extensions */ = {
+		AA5721A81B33AAEF00685487 /* RAS Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				AA8BF7991BD99393000279FF /* ReactiveCocoa+BindTo.swift */,
+				AA8BF7991BD99393000279FF /* ReactiveSwift+Binding.swift */,
 				AAA79FD21B35C5D900628BD2 /* Signal+Endpoints.swift */,
 				AA5721CE1B33B13900685487 /* SignalProducer+Endpoints.swift */,
 			);
-			name = "RAC Extensions";
+			name = "RAS Extensions";
 			sourceTree = "<group>";
 		};
 		AA5721AB1B33B0A100685487 /* Frameworks */ = {
@@ -483,7 +483,7 @@
 				AA5721CF1B33B13900685487 /* SignalProducer+Endpoints.swift in Sources */,
 				AAA79FC61B350F3F00628BD2 /* UIBarButtonItem+Endpoints.swift in Sources */,
 				AA5721C61B33B11800685487 /* UIImageView+Endpoints.swift in Sources */,
-				AA8BF79A1BD99393000279FF /* ReactiveCocoa+BindTo.swift in Sources */,
+				AA8BF79A1BD99393000279FF /* ReactiveSwift+Binding.swift in Sources */,
 				AA9295021BD86D9B00E4AC32 /* UIGestureRecognizer+Endpoints.swift in Sources */,
 				AA5721CA1B33B11800685487 /* UISwitch+Endpoints.swift in Sources */,
 				AA5721C21B33B11800685487 /* UIActivityIndicatorView+Endpoints.swift in Sources */,
@@ -533,7 +533,7 @@
 				AA8BF79D1BD99738000279FF /* UIGestureRecognizer+Endpoints.swift in Sources */,
 				AAE281631BB8BCA90080E8B7 /* UIButton+Endpoints.swift in Sources */,
 				AAE2815E1BB8BCA30080E8B7 /* Executor.swift in Sources */,
-				AA8BF79B1BD99393000279FF /* ReactiveCocoa+BindTo.swift in Sources */,
+				AA8BF79B1BD99393000279FF /* ReactiveSwift+Binding.swift in Sources */,
 				AAE2815F1BB8BCA30080E8B7 /* ObjCTarget.swift in Sources */,
 				AAE2815D1BB8BCA30080E8B7 /* Endpoint.swift in Sources */,
 				AAE2816C1BB8BCAE0080E8B7 /* Signal+Endpoints.swift in Sources */,

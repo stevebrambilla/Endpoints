@@ -24,7 +24,7 @@ class EndpointSpec: QuickSpec {
 			it("should bind using bind method") {
 				let producer = SignalProducer<String, NoError>(value: "Bound!")
 				let target = EndpointTarget()
-				disposable += target.textEndpoint.bind(producer)
+				disposable += target.textEndpoint.bind(from: producer)
 				expect(target.text) == "Bound!"
 			}
 
@@ -40,7 +40,7 @@ class EndpointSpec: QuickSpec {
 				let property = MutableProperty<String>("")
 
 				let target = EndpointTarget()
-				let textDisposable = target.textEndpoint.bind(property.producer)
+				let textDisposable = target.textEndpoint.bind(from: property.producer)
 				expect(target.text) == ""
 
 				property.value = "first"
@@ -62,7 +62,7 @@ class EndpointSpec: QuickSpec {
 				}
 
 				var target: EndpointTarget? = EndpointTarget()
-				target!.textEndpoint.bind(producer)
+				target!.textEndpoint.bind(from: producer)
 				expect(target!.text) == ""
 
 				signalObserver.send(value: "first")
@@ -87,7 +87,7 @@ class EndpointSpec: QuickSpec {
 				let textProducer = SignalProducer<String, NoError>(value: "Bound!")
 				disposable += target.textEndpoint
 					.on(before: { value in beforeValue = value }, after: { value in afterValue = value })
-					.bind(textProducer)
+					.bind(from: textProducer)
 
 				expect(target.text) == "Bound!"
 				expect(beforeValue) == "Bound!"

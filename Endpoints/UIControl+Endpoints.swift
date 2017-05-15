@@ -43,7 +43,7 @@ extension UIControl {
 	/// Note that the `UIControl` is strongly referenced by the
 	/// `SignalProducer`. This producer will not terminate naturally, so it must
 	/// be disposed or interrupted to avoid leaks.
-	public func controlEventsProducer(_ events: UIControlEvents) -> SignalProducer<AnyObject, NoError> {
+	public func controlEventsProducer(for events: UIControlEvents) -> SignalProducer<AnyObject, NoError> {
 		return SignalProducer { observer, disposable in
 			let target = ObjCTarget() { sender in
 				observer.send(value: sender)

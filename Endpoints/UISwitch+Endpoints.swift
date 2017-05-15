@@ -49,7 +49,7 @@ extension UISwitch {
 			observer.sendCompleted()
 		}
 
-		let onChanges = controlEventsProducer(UIControlEvents.valueChanged)
+		let onChanges = controlEventsProducer(for: .valueChanged)
 			.map { sender -> Bool in
 				if let theSwitch = sender as? UISwitch {
 					return theSwitch.isOn

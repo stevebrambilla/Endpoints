@@ -49,7 +49,7 @@ extension UISlider {
 			observer.sendCompleted()
 		}
 
-		let valueChanges = controlEventsProducer(.valueChanged)
+		let valueChanges = controlEventsProducer(for: .valueChanged)
 			.map { sender -> Float in
 				if let slider = sender as? UISlider {
 					return slider.value

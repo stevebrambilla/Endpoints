@@ -31,7 +31,7 @@ class ExecutorSpec: QuickSpec {
 				var count = 0
 				action.values.observeValues { _ in count += 1 }
 
-				disposable += source.executor.bindTo(action)
+				disposable += source.executor.bind(to: action)
 				expect(count) == 0
 
 				source.trigger()
@@ -52,7 +52,7 @@ class ExecutorSpec: QuickSpec {
 				var last = "--"
 				action.values.observeValues { last = $0 }
 
-				disposable += source.executor.bindTo(action) { x in String(x) }
+				disposable += source.executor.bind(to: action) { x in String(x) }
 				expect(last) == "--"
 
 				source.trigger()
@@ -69,7 +69,7 @@ class ExecutorSpec: QuickSpec {
 				var count = 0
 				action.values.observeValues { _ in count += 1 }
 
-				disposable += source.executor.bindTo(action)
+				disposable += source.executor.bind(to: action)
 				expect(count) == 0
 
 				source.trigger()
@@ -89,7 +89,7 @@ class ExecutorSpec: QuickSpec {
 					return SignalProducer(signal)
 				}
 
-				disposable += source.executor.bindTo(action)
+				disposable += source.executor.bind(to: action)
 				expect(source.enabled) == true
 
 				source.trigger()
@@ -113,7 +113,7 @@ class ExecutorSpec: QuickSpec {
 
 				disposable += source.executor
 					.on(enabled: { enabled in onEnabled = enabled })
-					.bindTo(action)
+					.bind(to: action)
 
 				expect(source.enabled) == true
 				expect(onEnabled) == true
@@ -139,7 +139,7 @@ class ExecutorSpec: QuickSpec {
 				var count = 0
 				action.values.observeValues { _ in count += 1 }
 
-				let actionDisposable = source.executor.bindTo(action)
+				let actionDisposable = source.executor.bind(to: action)
 				expect(count) == 0
 
 				source.trigger()
@@ -165,7 +165,7 @@ class ExecutorSpec: QuickSpec {
 
 				disposable += source.executor
 					.ignorePayloads()
-					.bindTo(action)
+					.bind(to: action)
 				expect(last) == "--"
 
 				source.trigger()
@@ -184,7 +184,7 @@ class ExecutorSpec: QuickSpec {
 
 				disposable += source.executor
 					.mapPayloads { String($0) }
-					.bindTo(action)
+					.bind(to: action)
 				expect(last) == "--"
 
 				source.trigger()

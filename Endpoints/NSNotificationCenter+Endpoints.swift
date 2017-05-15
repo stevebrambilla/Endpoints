@@ -18,10 +18,10 @@ extension NotificationCenter {
 	/// notification sender sends a notification named `name` from the object 
 	/// `object`, if one is provided.
 	///
-	/// Note that the `NSNotificationCenter` is strongly referenced by the
+	/// Note that the `NotificationCenter` is strongly referenced by the
 	/// `SignalProducer`. This producer will not terminate naturally, so it must
 	/// be disposed of or interrupted to avoid leaks.
-	public func notificationsProducerForName(name: NSNotification.Name, object: AnyObject? = nil) -> SignalProducer<Notification, NoError> {
+	public func notificationsProducer(forName name: Notification.Name, object: AnyObject? = nil) -> SignalProducer<Notification, NoError> {
 		return SignalProducer { observer, disposable in
 			let notificationObserver = self.addObserver(forName: name, object: object, queue: nil) { notification in
 				observer.send(value: notification)
@@ -40,7 +40,7 @@ extension NotificationCenter {
 extension NotificationCenter {
 	/// Returns an Exector that executes an Action whenever a notification named
 	/// `name` is sent.
-	public func executorForName(name: NSNotification.Name, object: AnyObject? = nil) -> Executor<Notification> {
-		return Executor(trigger: notificationsProducerForName(name: name, object: object))
+	public func executor(forName name: Notification.Name, object: AnyObject? = nil) -> Executor<Notification> {
+		return Executor(trigger: notificationsProducer(forName: name, object: object))
 	}
 }
