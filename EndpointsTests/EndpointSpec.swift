@@ -8,7 +8,7 @@
 
 import Foundation
 import Endpoints
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 import Quick
 import Nimble
@@ -37,18 +37,18 @@ class EndpointSpec: QuickSpec {
 
 		describe("Disposing") {
 			it("should dispose when disposable is disposed") {
-				let (producer, observer) = SignalProducer<String, NoError>.buffer(1)
+				let property = MutableProperty<String>("")
 
 				let target = EndpointTarget()
-				let textDisposable = target.textEndpoint.bind(producer)
+				let textDisposable = target.textEndpoint.bind(property.producer)
 				expect(target.text) == ""
 
-				observer.sendNext("first")
+				property.value = "first"
 				expect(target.text) == "first"
 
 				textDisposable.dispose()
 
-				observer.sendNext("second")
+				property.value = "second"
 				expect(target.text) == "first"
 			}
 
@@ -57,7 +57,7 @@ class EndpointSpec: QuickSpec {
 				var signalObserver: Signal<String, NoError>.Observer!
 
 				let producer = SignalProducer<String, NoError>() { observer, disposable in
-					disposable.addDisposable(addedDisposable)
+					disposable.add(addedDisposable)
 					signalObserver = observer
 				}
 
@@ -65,15 +65,15 @@ class EndpointSpec: QuickSpec {
 				target!.textEndpoint.bind(producer)
 				expect(target!.text) == ""
 
-				signalObserver.sendNext("first")
+				signalObserver.send(value: "first")
 				expect(target!.text) == "first"
 
 				target = nil
-				expect(addedDisposable.disposed) == false
+				expect(addedDisposable.isDisposed) == false
 
 				// Should short circuit after sending second value
-				signalObserver.sendNext("second")
-				expect(addedDisposable.disposed) == true
+				signalObserver.send(value: "second")
+				expect(addedDisposable.isDisposed) == true
 			}
 		}
 

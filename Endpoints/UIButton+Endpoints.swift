@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
@@ -29,25 +29,25 @@ extension UIButton {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIButton`'s `title`
 	/// value for the Normal control state.
 	public var titleEndpoint: Endpoint<String?> {
-		return Endpoint(self) { $0.setTitle($1, forState: .Normal) }
+		return Endpoint(self) { $0.setTitle($1, for: UIControlState()) }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIButton`'s
 	/// `attributedTitle` value for the Normal control state.
 	public var attributedTitleEndpoint: Endpoint<NSAttributedString?> {
-		return Endpoint(self) { $0.setAttributedTitle($1, forState: .Normal) }
+		return Endpoint(self) { $0.setAttributedTitle($1, for: UIControlState()) }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIButton`'s `image` 
 	/// value for the Normal control state.
 	public var imageEndpoint: Endpoint<UIImage?> {
-		return Endpoint(self) { $0.setImage($1, forState: .Normal) }
+		return Endpoint(self) { $0.setImage($1, for: UIControlState()) }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIButton`'s
 	/// `backgroundImage` value for the Normal control state.
 	public var backgroundImageEndpoint: Endpoint<UIImage?> {
-		return Endpoint(self) { $0.setBackgroundImage($1, forState: .Normal) }
+		return Endpoint(self) { $0.setBackgroundImage($1, for: UIControlState()) }
 	}
 }
 
@@ -65,9 +65,9 @@ extension UIButton {
 	public var triggerProducer: SignalProducer<UIButton, NoError> {
 		let triggerEvent: UIControlEvents = {
 			if #available(iOS 9, *) {
-				return .PrimaryActionTriggered
+				return .primaryActionTriggered
 			} else {
-				return .TouchUpInside
+				return .touchUpInside
 			}
 		}()
 

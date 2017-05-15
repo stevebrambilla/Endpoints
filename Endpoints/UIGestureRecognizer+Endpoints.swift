@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
@@ -17,7 +17,7 @@ extension UIGestureRecognizer {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIGestureRecognizer`'s
 	/// `enabled` value.
 	public var enabledEndpoint: Endpoint<Bool> {
-		return Endpoint(self) { $0.enabled = $1 }
+		return Endpoint(self) { $0.isEnabled = $1 }
 	}
 }
 
@@ -35,12 +35,12 @@ extension UIGestureRecognizer {
 		return SignalProducer { observer, disposable in
 			let target = ObjCTarget() { target in
 				guard let gestureRecognizer = target as? UIGestureRecognizer else { return }
-				observer.sendNext(gestureRecognizer)
+				observer.send(value: gestureRecognizer)
 			}
 
 			self.addTarget(target, action: target.selector)
 
-			disposable.addDisposable {
+			disposable.add {
 				self.removeTarget(target, action: target.selector)
 			}
 		}
@@ -53,7 +53,7 @@ extension UIGestureRecognizer {
 	/// `SignalProducer`. This producer will not terminate naturally, so it must
 	/// be disposed or interrupted to avoid leaks.
 	public var recognizedEventsProducer: SignalProducer<UIGestureRecognizer, NoError> {
-		return gestureEventsProducer.filter { $0.state == .Recognized }
+		return gestureEventsProducer.filter { $0.state == .recognized }
 	}
 }
 

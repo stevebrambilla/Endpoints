@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
@@ -25,7 +25,7 @@ extension UISwitch {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UISwitch`'s `on`
 	/// value without animation.
 	public var onEndpoint: Endpoint<Bool> {
-		return Endpoint(self) { $0.on = $1 }
+		return Endpoint(self) { $0.isOn = $1 }
 	}
 }
 
@@ -45,14 +45,14 @@ extension UISwitch {
 	public var onProducer: SignalProducer<Bool, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<Bool, NoError> { observer, _ in
-			observer.sendNext(self.on)
+			observer.send(value: self.isOn)
 			observer.sendCompleted()
 		}
 
-		let onChanges = controlEventsProducer(UIControlEvents.ValueChanged)
+		let onChanges = controlEventsProducer(UIControlEvents.valueChanged)
 			.map { sender -> Bool in
 				if let theSwitch = sender as? UISwitch {
-					return theSwitch.on
+					return theSwitch.isOn
 				} else {
 					fatalError("Expected sender to be an instance of UISwitch, got: \(sender).")
 				}

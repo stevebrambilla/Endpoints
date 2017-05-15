@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
@@ -55,11 +55,11 @@ extension UITextField {
 	public var textProducer: SignalProducer<String?, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<String?, NoError> { observer, _ in
-			observer.sendNext(self.text)
+			observer.send(value: self.text)
 			observer.sendCompleted()
 		}
 
-		let textChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
+		let textChanges = controlEventsProducer(UIControlEvents.allEditingEvents)
 			.map { sender -> String? in
 				guard let textField = sender as? UITextField else {
 					fatalError("Expected sender to be an instance of UITextField, got: \(sender).")
@@ -82,14 +82,14 @@ extension UITextField {
 	public var editingProducer: SignalProducer<Bool, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<Bool, NoError> { observer, _ in
-			observer.sendNext(self.editing)
+			observer.send(value: self.isEditing)
 			observer.sendCompleted()
 		}
 
-		let editingChanges = controlEventsProducer(UIControlEvents.AllEditingEvents)
+		let editingChanges = controlEventsProducer(UIControlEvents.allEditingEvents)
 			.map { sender -> Bool in
 				if let textField = sender as? UITextField {
-					return textField.editing
+					return textField.isEditing
 				} else {
 					fatalError("Expected sender to be an instance of UITextField, got: \(sender).")
 				}

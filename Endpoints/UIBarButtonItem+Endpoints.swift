@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
@@ -25,13 +25,13 @@ extension UIBarButtonItem {
 	public var triggerProducer: SignalProducer<UIBarButtonItem, NoError> {
 		let sourceEvents = SignalProducer<AnyObject, NoError> { observer, disposable in
 			let target = ObjCTarget() { sender in
-				observer.sendNext(sender)
+				observer.send(value: sender)
 			}
 
 			self.target = target
 			self.action = target.selector
 
-			disposable.addDisposable {
+			disposable.add {
 				target.dispose() // Strongly retains `target`
 				self.target = nil
 				self.action = nil

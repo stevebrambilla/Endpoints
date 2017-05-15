@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
@@ -45,11 +45,11 @@ extension UISlider {
 	public var valueProducer: SignalProducer<Float, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<Float, NoError> { observer, _ in
-			observer.sendNext(self.value)
+			observer.send(value: self.value)
 			observer.sendCompleted()
 		}
 
-		let valueChanges = controlEventsProducer(.ValueChanged)
+		let valueChanges = controlEventsProducer(.valueChanged)
 			.map { sender -> Float in
 				if let slider = sender as? UISlider {
 					return slider.value

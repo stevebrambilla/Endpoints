@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 
-extension SignalProducerType {
+extension SignalProducerProtocol {
 	/// Maps the producer into a producer of tuples, with a `following` flag as the
 	/// second parameter of the tuple. The `following` value is set to false for the
 	/// first Next event, then true for all following Next events.

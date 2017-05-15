@@ -25,18 +25,10 @@
 		AA5721CD1B33B11800685487 /* UIView+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5721C11B33B11800685487 /* UIView+Endpoints.swift */; };
 		AA5721CF1B33B13900685487 /* SignalProducer+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5721CE1B33B13900685487 /* SignalProducer+Endpoints.swift */; };
 		AA5721D61B33B37E00685487 /* EndpointTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5721D41B33B37E00685487 /* EndpointTarget.swift */; };
-		AA848CDF1D5E0B7F00AC6FBB /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CD71D5E0B6B00AC6FBB /* ReactiveCocoa.framework */; };
 		AA848CE01D5E0B7F00AC6FBB /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CD81D5E0B6B00AC6FBB /* Result.framework */; };
-		AA848CE11D5E0B8400AC6FBB /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CDB1D5E0B7600AC6FBB /* ReactiveCocoa.framework */; };
 		AA848CE21D5E0B8400AC6FBB /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CDC1D5E0B7600AC6FBB /* Result.framework */; };
-		AA848CE31D5E0D1B00AC6FBB /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CD71D5E0B6B00AC6FBB /* ReactiveCocoa.framework */; };
 		AA848CE41D5E0D1D00AC6FBB /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CD81D5E0B6B00AC6FBB /* Result.framework */; };
-		AA848CE61D5E0DAD00AC6FBB /* ReactiveCocoa.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CD71D5E0B6B00AC6FBB /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA848CE71D5E0DAD00AC6FBB /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CD81D5E0B6B00AC6FBB /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		AA848CEE1D5E27C100AC6FBB /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CEC1D5E27C100AC6FBB /* Nimble.framework */; };
-		AA848CEF1D5E27C100AC6FBB /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CED1D5E27C100AC6FBB /* Quick.framework */; };
-		AA848CF01D5E27DC00AC6FBB /* Nimble.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CEC1D5E27C100AC6FBB /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		AA848CF11D5E27DC00AC6FBB /* Quick.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AA848CED1D5E27C100AC6FBB /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA848CF31D5E280400AC6FBB /* ExecutorSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA848CF21D5E280400AC6FBB /* ExecutorSpec.swift */; };
 		AA848CF51D5E34B400AC6FBB /* EndpointSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA848CF41D5E34B400AC6FBB /* EndpointSpec.swift */; };
 		AA8BF79A1BD99393000279FF /* ReactiveCocoa+BindTo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8BF7991BD99393000279FF /* ReactiveCocoa+BindTo.swift */; };
@@ -65,6 +57,16 @@
 		AAE2816A1BB8BCA90080E8B7 /* UIView+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5721C11B33B11800685487 /* UIView+Endpoints.swift */; };
 		AAE2816B1BB8BCAE0080E8B7 /* SignalProducer+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5721CE1B33B13900685487 /* SignalProducer+Endpoints.swift */; };
 		AAE2816C1BB8BCAE0080E8B7 /* Signal+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA79FD21B35C5D900628BD2 /* Signal+Endpoints.swift */; };
+		AAF8992B1EC662830049CC74 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992A1EC6627C0049CC74 /* ReactiveSwift.framework */; };
+		AAF8992D1EC662930049CC74 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992C1EC662930049CC74 /* ReactiveSwift.framework */; };
+		AAF899311ECA4CCD0049CC74 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992F1ECA4CCD0049CC74 /* Nimble.framework */; };
+		AAF899321ECA4CCD0049CC74 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF899301ECA4CCD0049CC74 /* Quick.framework */; };
+		AAF899331ECA4CD40049CC74 /* Nimble.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992F1ECA4CCD0049CC74 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AAF899341ECA4CD40049CC74 /* Quick.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AAF899301ECA4CCD0049CC74 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AAF899351ECA4CE50049CC74 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992F1ECA4CCD0049CC74 /* Nimble.framework */; };
+		AAF899361ECA4CE50049CC74 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF899301ECA4CCD0049CC74 /* Quick.framework */; };
+		AAF899371ECA4D010049CC74 /* ReactiveSwift.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992C1EC662930049CC74 /* ReactiveSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AAF899381ECA4D070049CC74 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992C1EC662930049CC74 /* ReactiveSwift.framework */; };
 		AAFB3EAC1C02868400064A73 /* NSNotificationCenter+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB3EAB1C02868400064A73 /* NSNotificationCenter+Endpoints.swift */; };
 		AAFB3EAD1C02868400064A73 /* NSNotificationCenter+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB3EAB1C02868400064A73 /* NSNotificationCenter+Endpoints.swift */; };
 /* End PBXBuildFile section */
@@ -86,10 +88,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AA848CE61D5E0DAD00AC6FBB /* ReactiveCocoa.framework in Copy Frameworks */,
 				AA848CE71D5E0DAD00AC6FBB /* Result.framework in Copy Frameworks */,
-				AA848CF01D5E27DC00AC6FBB /* Nimble.framework in Copy Frameworks */,
-				AA848CF11D5E27DC00AC6FBB /* Quick.framework in Copy Frameworks */,
+				AAF899331ECA4CD40049CC74 /* Nimble.framework in Copy Frameworks */,
+				AAF899341ECA4CD40049CC74 /* Quick.framework in Copy Frameworks */,
+				AAF899371ECA4D010049CC74 /* ReactiveSwift.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,14 +120,10 @@
 		AA5721C11B33B11800685487 /* UIView+Endpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Endpoints.swift"; sourceTree = "<group>"; };
 		AA5721CE1B33B13900685487 /* SignalProducer+Endpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SignalProducer+Endpoints.swift"; sourceTree = "<group>"; };
 		AA5721D41B33B37E00685487 /* EndpointTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointTarget.swift; sourceTree = "<group>"; };
-		AA848CD71D5E0B6B00AC6FBB /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/iOS/ReactiveCocoa.framework; sourceTree = "<group>"; };
 		AA848CD81D5E0B6B00AC6FBB /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
-		AA848CDB1D5E0B7600AC6FBB /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/tvOS/ReactiveCocoa.framework; sourceTree = "<group>"; };
 		AA848CDC1D5E0B7600AC6FBB /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/tvOS/Result.framework; sourceTree = "<group>"; };
 		AA848CE81D5E27A300AC6FBB /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/tvOS/Nimble.framework; sourceTree = "<group>"; };
 		AA848CE91D5E27A300AC6FBB /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/tvOS/Quick.framework; sourceTree = "<group>"; };
-		AA848CEC1D5E27C100AC6FBB /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/tvOS/Nimble.framework; sourceTree = "<group>"; };
-		AA848CED1D5E27C100AC6FBB /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/tvOS/Quick.framework; sourceTree = "<group>"; };
 		AA848CF21D5E280400AC6FBB /* ExecutorSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutorSpec.swift; sourceTree = "<group>"; };
 		AA848CF41D5E34B400AC6FBB /* EndpointSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointSpec.swift; sourceTree = "<group>"; };
 		AA8BF7991BD99393000279FF /* ReactiveCocoa+BindTo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ReactiveCocoa+BindTo.swift"; sourceTree = "<group>"; };
@@ -138,6 +136,10 @@
 		AAE281531BB8BC540080E8B7 /* Endpoints.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Endpoints.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAE281551BB8BC540080E8B7 /* Endpoints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Endpoints.h; sourceTree = "<group>"; };
 		AAE281571BB8BC540080E8B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AAF8992A1EC6627C0049CC74 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveSwift.framework; path = Carthage/Build/tvOS/ReactiveSwift.framework; sourceTree = "<group>"; };
+		AAF8992C1EC662930049CC74 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveSwift.framework; path = Carthage/Build/iOS/ReactiveSwift.framework; sourceTree = "<group>"; };
+		AAF8992F1ECA4CCD0049CC74 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
+		AAF899301ECA4CCD0049CC74 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		AAFB3EAB1C02868400064A73 /* NSNotificationCenter+Endpoints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSNotificationCenter+Endpoints.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -146,8 +148,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA848CDF1D5E0B7F00AC6FBB /* ReactiveCocoa.framework in Frameworks */,
+				AAF899321ECA4CCD0049CC74 /* Quick.framework in Frameworks */,
+				AAF899311ECA4CCD0049CC74 /* Nimble.framework in Frameworks */,
 				AA848CE01D5E0B7F00AC6FBB /* Result.framework in Frameworks */,
+				AAF8992D1EC662930049CC74 /* ReactiveSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,10 +160,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA5721791B33A8F300685487 /* Endpoints.framework in Frameworks */,
-				AA848CE31D5E0D1B00AC6FBB /* ReactiveCocoa.framework in Frameworks */,
+				AAF899381ECA4D070049CC74 /* ReactiveSwift.framework in Frameworks */,
 				AA848CE41D5E0D1D00AC6FBB /* Result.framework in Frameworks */,
-				AA848CEF1D5E27C100AC6FBB /* Quick.framework in Frameworks */,
-				AA848CEE1D5E27C100AC6FBB /* Nimble.framework in Frameworks */,
+				AAF899351ECA4CE50049CC74 /* Nimble.framework in Frameworks */,
+				AAF899361ECA4CE50049CC74 /* Quick.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,8 +171,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA848CE11D5E0B8400AC6FBB /* ReactiveCocoa.framework in Frameworks */,
 				AA848CE21D5E0B8400AC6FBB /* Result.framework in Frameworks */,
+				AAF8992B1EC662830049CC74 /* ReactiveSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,9 +286,9 @@
 		AA848CD51D5E0B4C00AC6FBB /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				AA848CEC1D5E27C100AC6FBB /* Nimble.framework */,
-				AA848CED1D5E27C100AC6FBB /* Quick.framework */,
-				AA848CD71D5E0B6B00AC6FBB /* ReactiveCocoa.framework */,
+				AAF8992F1ECA4CCD0049CC74 /* Nimble.framework */,
+				AAF899301ECA4CCD0049CC74 /* Quick.framework */,
+				AAF8992C1EC662930049CC74 /* ReactiveSwift.framework */,
 				AA848CD81D5E0B6B00AC6FBB /* Result.framework */,
 			);
 			name = iOS;
@@ -293,9 +297,9 @@
 		AA848CD61D5E0B5000AC6FBB /* tvOS */ = {
 			isa = PBXGroup;
 			children = (
+				AAF8992A1EC6627C0049CC74 /* ReactiveSwift.framework */,
 				AA848CE81D5E27A300AC6FBB /* Nimble.framework */,
 				AA848CE91D5E27A300AC6FBB /* Quick.framework */,
-				AA848CDB1D5E0B7600AC6FBB /* ReactiveCocoa.framework */,
 				AA848CDC1D5E0B7600AC6FBB /* Result.framework */,
 			);
 			name = tvOS;
@@ -416,9 +420,11 @@
 				TargetAttributes = {
 					AA57216C1B33A8F300685487 = {
 						CreatedOnToolsVersion = 6.3.2;
+						LastSwiftMigration = 0820;
 					};
 					AA5721771B33A8F300685487 = {
 						CreatedOnToolsVersion = 6.3.2;
+						LastSwiftMigration = 0820;
 					};
 					AAE281521BB8BC540080E8B7 = {
 						CreatedOnToolsVersion = 7.1;
@@ -588,6 +594,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stevebrambilla.Endpoints;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -628,6 +635,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stevebrambilla.Endpoints;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";

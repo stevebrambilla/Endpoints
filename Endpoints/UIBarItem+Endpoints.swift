@@ -15,7 +15,7 @@ extension UIBarItem {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIBarItem`'s `enabled`
 	/// value without animation.
 	public var enabledEndpoint: Endpoint<Bool> {
-		return Endpoint(self) { $0.enabled = $1 }
+		return Endpoint(self) { $0.isEnabled = $1 }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIBarItem`'s `title`

@@ -8,7 +8,7 @@
 
 import Foundation
 import Endpoints
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 import Quick
 import Nimble
@@ -29,7 +29,7 @@ class ExecutorSpec: QuickSpec {
 				}
 
 				var count = 0
-				action.values.observeNext { _ in count += 1 }
+				action.values.observeValues { _ in count += 1 }
 
 				disposable += source.executor.bindTo(action)
 				expect(count) == 0
@@ -50,7 +50,7 @@ class ExecutorSpec: QuickSpec {
 				}
 
 				var last = "--"
-				action.values.observeNext { last = $0 }
+				action.values.observeValues { last = $0 }
 
 				disposable += source.executor.bindTo(action) { x in String(x) }
 				expect(last) == "--"
@@ -67,7 +67,7 @@ class ExecutorSpec: QuickSpec {
 				}
 
 				var count = 0
-				action.values.observeNext { _ in count += 1 }
+				action.values.observeValues { _ in count += 1 }
 
 				disposable += source.executor.bindTo(action)
 				expect(count) == 0
@@ -86,7 +86,7 @@ class ExecutorSpec: QuickSpec {
 
 				let (signal, observer) = Signal<Int, NoError>.pipe()
 				let action = Action<Int, Int, NoError> { _ in
-					return SignalProducer(signal: signal)
+					return SignalProducer(signal)
 				}
 
 				disposable += source.executor.bindTo(action)
@@ -106,7 +106,7 @@ class ExecutorSpec: QuickSpec {
 
 				let (signal, observer) = Signal<Int, NoError>.pipe()
 				let action = Action<Int, Int, NoError> { _ in
-					return SignalProducer(signal: signal)
+					return SignalProducer(signal)
 				}
 
 				var onEnabled: Bool?
@@ -137,7 +137,7 @@ class ExecutorSpec: QuickSpec {
 				}
 
 				var count = 0
-				action.values.observeNext { _ in count += 1 }
+				action.values.observeValues { _ in count += 1 }
 
 				let actionDisposable = source.executor.bindTo(action)
 				expect(count) == 0
@@ -161,7 +161,7 @@ class ExecutorSpec: QuickSpec {
 				}
 
 				var last = "--"
-				action.values.observeNext { last = $0 }
+				action.values.observeValues { last = $0 }
 
 				disposable += source.executor
 					.ignorePayloads()
@@ -180,7 +180,7 @@ class ExecutorSpec: QuickSpec {
 				}
 
 				var last = "--"
-				action.values.observeNext { last = $0 }
+				action.values.observeValues { last = $0 }
 
 				disposable += source.executor
 					.mapPayloads { String($0) }
