@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
@@ -18,28 +18,28 @@ import Result
 ///
 /// Signal producers can be bound to Endpoints using:
 /// 
-/// - `SignalProducer.bindTo(<endpoint>)`
-/// - `Property.bindTo(<endpoint>)`
-/// - `Endpoint.bind(<producer>)`
-/// - The ReactiveCocoa bind operator (`<~`)
+/// - `SignalProducer.bind(to: <endpoint>)`
+/// - `Property.bind(to: <endpoint>)`
+/// - `Endpoint.bind(from: <producer>)`
+/// - The ReactiveSwift bind operator (`<~`)
 ///
 /// Endpoints are expected to be exposed by UI classes, so binding a signal
 /// producer guarantees that the setter is invoked on the main thread. 
-/// Therefore, it's not necessary to call `observeOn(UIScheduler())` on the 
+/// Therefore, it's not necessary to call `observe(on: UIScheduler())` on the
 /// bound signal producers.
 ///
 /// Endpoints keep a *weak* reference to their targets. If a value is sent to an
 /// endpoint whose target reference has been zero'd out, the binding will be
 /// terminated.
 public struct Endpoint<Value> {
-	private typealias Setter = () -> ()
-	private let generateSetter: Value -> Result<Setter, EndpointError>
-	private let before: (Value -> ())?
-	private let after: (Value -> ())?
+	private typealias Setter = () -> Void
+	private let generateSetter: (Value) -> Result<Setter, EndpointError>
+	private let before: ((Value) -> Void)?
+	private let after: ((Value) -> Void)?
 
-	public init<Target: AnyObject>(_ target: Target, writeValue: (Target, Value) -> ()) {
+	public init<Target: AnyObject>(_ target: Target, writeValue: @escaping (Target, Value) -> ()) {
 		self.generateSetter = { [weak target] value in
-			guard let strongTarget = target else { return Result(error: .TargetZerod) }
+			guard let strongTarget = target else { return Result(error: .targetZerod) }
 			let setter = { writeValue(strongTarget, value) } // Strongly captures the target
 			return Result(value: setter)
 		}
@@ -48,7 +48,7 @@ public struct Endpoint<Value> {
 		self.after = nil
 	}
 
-	private init(generator: Value -> Result<Setter, EndpointError>, before: (Value -> ())?, after: (Value -> ())?) {
+	private init(generator: @escaping (Value) -> Result<Setter, EndpointError>, before: ((Value) -> Void)?, after: ((Value) -> Void)?) {
 		self.generateSetter = generator
 
 		self.before = before
@@ -57,26 +57,27 @@ public struct Endpoint<Value> {
 
 	/// Injects side effects to be performed either before or after setting the 
 	/// value. Execution is always on the main thread.
-	public func on(before before: (Value -> ())? = nil, after: (Value -> ())? = nil) -> Endpoint {
+	public func on(before: ((Value) -> Void)? = nil, after: ((Value) -> Void)? = nil) -> Endpoint {
 		return Endpoint(generator: generateSetter, before: before, after: after)
 	}
 
 	/// Binds `signal` to the endpoint and returns the Disposable that can be
 	/// used to cancel the binding.
-	public func bind(signal: Signal<Value, NoError>) -> Disposable {
+	public func bind(from signal: Signal<Value, NoError>) -> Disposable {
 		// Create a signal producer from the signal and bind to it.
 		let producer = SignalProducer { observer, disposable in
 			disposable += signal.observe(observer)
 		}
 
-		return bind(producer)
+		return bind(from: producer)
 	}
 
 	/// Binds `producer` to the endpoint and returns a Disposable that can be
 	/// used to cancel the binding.
-	public func bind(producer: SignalProducer<Value, NoError>) -> Disposable {
+	@discardableResult
+	public func bind(from producer: SignalProducer<Value, NoError>) -> Disposable {
 		return producer
-			.promoteErrors(EndpointError)
+			.promoteErrors(EndpointError.self)
 
 			// Create a Setter with the strongly captured target.
 			// If an error occurs (eg. target was zero'd), then the binding terminates.
@@ -85,7 +86,7 @@ public struct Endpoint<Value> {
 			}
 
 			// Execute the setter on the UI thread.
-			.observeOn(UIScheduler())
+			.observe(on: UIScheduler())
 			.startWithResult { [before = self.before, after = self.after] result in
 				guard let (value, setter) = result.value else { return }
 
@@ -96,8 +97,8 @@ public struct Endpoint<Value> {
 	}
 }
 
-private enum EndpointError: ErrorType {
-	case TargetZerod
+private enum EndpointError: Error {
+	case targetZerod
 }
 
 // ----------------------------------------------------------------------------
@@ -106,11 +107,11 @@ private enum EndpointError: ErrorType {
 /// Binds `producer` to `endpoint` and returns a Disposable that can be used
 /// to cancel the binding.
 public func <~ <T>(endpoint: Endpoint<T>, producer: SignalProducer<T, NoError>) -> Disposable {
-	return endpoint.bind(producer)
+	return endpoint.bind(from: producer)
 }
 
 /// Binds `property` to `endpoint` and returns a Disposable that can be used
 /// to cancel the binding.
-public func <~ <T, P: PropertyType where P.Value == T>(endpoint: Endpoint<T>, property: P) -> Disposable {
-	return endpoint.bind(property.producer)
+public func <~ <T, P: PropertyProtocol>(endpoint: Endpoint<T>, property: P) -> Disposable where P.Value == T {
+	return endpoint.bind(from: property.producer)
 }

@@ -15,7 +15,7 @@ extension UIView {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIView`'s 
 	/// `userInteractionEnabled` value.
 	public var userInteractionEnabledEndpoint: Endpoint<Bool> {
-		return Endpoint(self) { $0.userInteractionEnabled = $1 }
+		return Endpoint(self) { $0.isUserInteractionEnabled = $1 }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIView`'s 
@@ -27,7 +27,7 @@ extension UIView {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIView`'s `hidden` 
 	/// value.
 	public var hiddenEndpoint: Endpoint<Bool> {
-		return Endpoint(self) { $0.hidden = $1 }
+		return Endpoint(self) { $0.isHidden = $1 }
 	}
 
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIView`'s `alpha` 

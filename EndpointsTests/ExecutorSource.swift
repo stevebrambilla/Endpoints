@@ -8,15 +8,15 @@
 
 import Foundation
 import Endpoints
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
-class ExecutorSource {
+internal class ExecutorSource {
 	private(set) var enabled = false
 
-	let (eventSignal, eventObserver) = Signal<Int, NoError>.pipe()
+	internal let (eventSignal, eventObserver) = Signal<Int, NoError>.pipe()
 
-	var executor: Executor<Int> {
+	internal var executor: Executor<Int> {
 		let enabled = Endpoint(self) { $0.enabled = $1 }
 
 		let producer = SignalProducer { observer, _ in
@@ -27,8 +27,8 @@ class ExecutorSource {
 	}
 
 	private var count = 0
-	func trigger() {
-		eventObserver.sendNext(count)
+	internal func trigger() {
+		eventObserver.send(value: count)
 		count += 1
 	}
 }

@@ -7,27 +7,27 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
 // MARK: - Signal Producers
 
-extension NSNotificationCenter {
+extension NotificationCenter {
 	/// Returns a signal producer that sends notifications each time the 
 	/// notification sender sends a notification named `name` from the object 
 	/// `object`, if one is provided.
 	///
-	/// Note that the `NSNotificationCenter` is strongly referenced by the
+	/// Note that the `NotificationCenter` is strongly referenced by the
 	/// `SignalProducer`. This producer will not terminate naturally, so it must
 	/// be disposed of or interrupted to avoid leaks.
-	public func notificationsProducerForName(name: String, object: AnyObject? = nil) -> SignalProducer<NSNotification, NoError> {
+	public func notificationsProducer(forName name: Notification.Name, object: AnyObject? = nil) -> SignalProducer<Notification, NoError> {
 		return SignalProducer { observer, disposable in
-			let notificationObserver = self.addObserverForName(name, object: object, queue: nil) { notification in
-				observer.sendNext(notification)
+			let notificationObserver = self.addObserver(forName: name, object: object, queue: nil) { notification in
+				observer.send(value: notification)
 			}
 
-			disposable.addDisposable {
+			disposable.add {
 				self.removeObserver(notificationObserver)
 			}
 		}
@@ -37,10 +37,10 @@ extension NSNotificationCenter {
 // ----------------------------------------------------------------------------
 // MARK: - Executors
 
-extension NSNotificationCenter {
+extension NotificationCenter {
 	/// Returns an Exector that executes an Action whenever a notification named
 	/// `name` is sent.
-	public func executorForName(name: String, object: AnyObject? = nil) -> Executor<NSNotification> {
-		return Executor(trigger: notificationsProducerForName(name, object: object))
+	public func executor(forName name: Notification.Name, object: AnyObject? = nil) -> Executor<Notification> {
+		return Executor(trigger: notificationsProducer(forName: name, object: object))
 	}
 }

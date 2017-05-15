@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 
-extension SignalType {
+extension SignalProtocol {
 	/// Creates a SignalProducer from a Signal and prepends an initial value to
 	/// the stream, which is sent immediately when the SignalProducer is 
 	/// started.
-	public func withInitialValue(initialValue: Value) -> SignalProducer<Value, Error> {
+	public func withInitialValue(_ initialValue: Value) -> SignalProducer<Value, Error> {
 		return SignalProducer { observer, disposable in
-			observer.sendNext(initialValue)
+			observer.send(value: initialValue)
 			disposable += self.signal.observe(observer)
 		}
 	}

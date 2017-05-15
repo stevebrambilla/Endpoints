@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
@@ -18,47 +18,47 @@ import Result
 /// Executors also bind the `enabled` state of Actions to an Endpoint that is
 /// exposed by the executor's owner.
 ///
-/// Actions can be bound to Executors using the `bindTo()` method.
+/// Actions can be bound to Executors using the `bind(to:)` method.
 ///
 /// If the Executor's trigger `Payload` type doesn't match the Action's `Input`
 /// type, a transform function can be provided to map `Payloads` to `Inputs`.
 public struct Executor<Payload> {
 	private let enabledEndpoint: Endpoint<Bool>?
 	private let trigger: Trigger<Payload>
-	private let afterEnabled: (Bool -> ())?
+	private let afterEnabled: ((Bool) -> Void)?
 
-	public init<T>(enabled: Endpoint<Bool>? = nil, trigger producer: SignalProducer<T, NoError>, transform: T -> Payload) {
-		self.init(enabled: enabled, trigger: .SignalProducer(producer), transform: transform)
+	public init<T>(enabled: Endpoint<Bool>? = nil, trigger producer: SignalProducer<T, NoError>, transform: @escaping (T) -> Payload) {
+		self.init(enabled: enabled, trigger: .signalProducer(producer), transform: transform)
 	}
 
 	public init(enabled: Endpoint<Bool>? = nil, trigger producer: SignalProducer<Payload, NoError>) {
-		self.init(enabled: enabled, trigger: .SignalProducer(producer))
+		self.init(enabled: enabled, trigger: .signalProducer(producer))
 	}
 
-	public init<T>(enabled: Endpoint<Bool>? = nil, trigger signal: Signal<T, NoError>, transform: T -> Payload) {
-		self.init(enabled: enabled, trigger: .Signal(signal), transform: transform)
+	public init<T>(enabled: Endpoint<Bool>? = nil, trigger signal: Signal<T, NoError>, transform: @escaping (T) -> Payload) {
+		self.init(enabled: enabled, trigger: .signal(signal), transform: transform)
 	}
 
 	public init(enabled: Endpoint<Bool>? = nil, trigger signal: Signal<Payload, NoError>) {
-		self.init(enabled: enabled, trigger: .Signal(signal))
+		self.init(enabled: enabled, trigger: .signal(signal))
 	}
 
 	// "Designated" initializer without transform. Can supply `afterEnabled` closure.
-	private init(enabled: Endpoint<Bool>?, trigger: Trigger<Payload>, afterEnabled: (Bool -> ())? = nil) {
+	private init(enabled: Endpoint<Bool>?, trigger: Trigger<Payload>, afterEnabled: ((Bool) -> Void)? = nil) {
 		self.enabledEndpoint = enabled
 		self.trigger = trigger
 		self.afterEnabled = afterEnabled
 	}
 
 	// "Designated" initializer with transform.
-	private init<T>(enabled: Endpoint<Bool>?, trigger: Trigger<T>, transform: T -> Payload) {
+	private init<T>(enabled: Endpoint<Bool>?, trigger: Trigger<T>, transform: @escaping (T) -> Payload) {
 		self.enabledEndpoint = enabled
 		self.trigger = trigger.map(transform)
 		self.afterEnabled = nil
 	}
 
 	/// Maps each trigger payload from the Executor to a new value.
-	public func mapPayloads<U>(transform: Payload -> U) -> Executor<U> {
+	public func mapPayloads<U>(_ transform: @escaping (Payload) -> U) -> Executor<U> {
 		return Executor<U>(enabled: enabledEndpoint, trigger: trigger, transform: transform)
 	}
 
@@ -69,7 +69,7 @@ public struct Executor<Payload> {
 
 	/// Injects side effects to be performed after the `enabled` Endpoint is
 	/// updated.
-	public func on(enabled enabled: Bool -> ()) -> Executor {
+	public func on(enabled: @escaping (Bool) -> Void) -> Executor {
 		return Executor(enabled: enabledEndpoint, trigger: trigger, afterEnabled: enabled)
 	}
 
@@ -78,8 +78,8 @@ public struct Executor<Payload> {
 	/// input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
-	public func bindTo<Output, Error>(action: Action<Payload, Output, Error>) -> Disposable {
-		return bindTo(action, transform: { $0 })
+	public func bind<Output, Error>(to action: Action<Payload, Output, Error>) -> Disposable {
+		return bind(to: action, transform: { $0 })
 	}
 
 	/// Binds `executor` to `action`, so the Action is executed whenever the
@@ -87,13 +87,13 @@ public struct Executor<Payload> {
 	/// by applying `transform` before being used as the input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
-	public func bindTo<Input, Output, Error>(action: Action<Input, Output, Error>, transform: Payload -> Input) -> Disposable {
+	public func bind<Input, Output, Error>(to action: Action<Input, Output, Error>, transform: @escaping (Payload) -> Input) -> Disposable {
 		let disposable = CompositeDisposable()
 
 		if let enabledEndpoint = enabledEndpoint {
 			disposable += enabledEndpoint
 				.on(after: afterEnabled)
-				.bind(action.enabled.producer)
+				.bind(from: action.isEnabled.producer)
 		}
 
 		disposable += trigger.observe { payload in
@@ -105,27 +105,27 @@ public struct Executor<Payload> {
 	}
 }
 
-private enum Trigger<Payload> {
-	case Signal(ReactiveCocoa.Signal<Payload, NoError>)
-	case SignalProducer(ReactiveCocoa.SignalProducer<Payload, NoError>)
+fileprivate enum Trigger<Payload> {
+	case signal(Signal<Payload, NoError>)
+	case signalProducer(SignalProducer<Payload, NoError>)
 
-	private func map<U>(transform: Payload -> U) -> Trigger<U> {
+	fileprivate func map<U>(_ transform: @escaping (Payload) -> U) -> Trigger<U> {
 		switch self {
-		case let .Signal(signal):
-			return .Signal(signal.map(transform))
+		case let .signal(signal):
+			return .signal(signal.map(transform))
 
-		case let .SignalProducer(producer):
-			return .SignalProducer(producer.map(transform))
+		case let .signalProducer(producer):
+			return .signalProducer(producer.map(transform))
 		}
 	}
 
-	private func observe(next: Payload -> ()) -> Disposable? {
+	fileprivate func observe(payload: @escaping (Payload) -> Void) -> Disposable? {
 		switch self {
-		case let .Signal(signal):
-			return signal.observeNext { next($0) }
+		case let .signal(signal):
+			return signal.observeValues { payload($0) }
 
-		case let .SignalProducer(producer):
-			return producer.startWithNext { next($0) }
+		case let .signalProducer(producer):
+			return producer.startWithValues { payload($0) }
 		}
 	}
 }

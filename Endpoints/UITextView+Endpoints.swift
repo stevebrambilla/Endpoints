@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 // ----------------------------------------------------------------------------
@@ -19,7 +19,7 @@ extension UITextView {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UITextView`'s
 	/// `editable` value.
 	public var editableEndpoint: Endpoint<Bool> {
-		return Endpoint(self) { $0.editable = $1 }
+		return Endpoint(self) { $0.isEditable = $1 }
 	}
 }
 #endif
@@ -66,12 +66,11 @@ extension UITextView {
 	public var textProducer: SignalProducer<String, NoError> {
 		// Current value lookup deferred until producer is started.
 		let currentValue = SignalProducer<String, NoError> { observer, _ in
-			observer.sendNext(self.text)
+			observer.send(value: self.text)
 			observer.sendCompleted()
 		}
 
-		let notificationCenter = NSNotificationCenter.defaultCenter()
-		let textChanges = notificationCenter.rac_notifications(UITextViewTextDidChangeNotification, object: self)
+		let textChanges = NotificationCenter.default.notificationsProducer(forName: Notification.Name.UITextViewTextDidChange)
 			.map { notification -> String in
 				if let textView = notification.object as? UITextView {
 					return String(textView.text)
@@ -95,12 +94,10 @@ extension UITextView {
 	/// therefore the function accepts an optional `initialValue` the will be
 	/// sent immediately upon starting the signal. If not `initialValue` is 
 	/// provided it defaults to `false`.
-	public func editingProducer(initialValue: Bool = false) -> SignalProducer<Bool, NoError> {
-		let notificationCenter = NSNotificationCenter.defaultCenter()
-		let beganEditing = notificationCenter.rac_notifications(UITextViewTextDidBeginEditingNotification, object: self).map { _ in true }
-		let endedEditing = notificationCenter.rac_notifications(UITextViewTextDidEndEditingNotification, object: self).map { _ in false }
-		let editingChanges = SignalProducer(values: [beganEditing, endedEditing]).flatten(.Merge)
-
+	public func editingProducer(_ initialValue: Bool = false) -> SignalProducer<Bool, NoError> {
+		let beganEditing = NotificationCenter.default.notificationsProducer(forName: Notification.Name.UITextViewTextDidBeginEditing, object: self).map { _ in true }
+		let endedEditing = NotificationCenter.default.notificationsProducer(forName: Notification.Name.UITextViewTextDidEndEditing, object: self).map { _ in false }
+		let editingChanges = SignalProducer.merge(beganEditing, endedEditing)
 		return SignalProducer(value: initialValue).concat(editingChanges)
 	}
 }

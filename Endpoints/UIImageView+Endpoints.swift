@@ -27,6 +27,6 @@ extension UIImageView {
 	/// An `Endpoint` to bind a `SignalProducer` to the `UIImageView`'s 
 	/// `highlighted` value.
 	public var highlightedEndpoint: Endpoint<Bool> {
-		return Endpoint(self) { $0.highlighted = $1 }
+		return Endpoint(self) { $0.isHighlighted = $1 }
 	}
 }

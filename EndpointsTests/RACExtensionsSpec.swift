@@ -7,7 +7,7 @@
 //
 
 import Endpoints
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 import Quick
 import Nimble
@@ -16,7 +16,7 @@ class RACExtensionsSpec: QuickSpec {
 	override func spec() {
 		describe("animateFollowingFirst") {
 			it("should map to tuples with the first value being false") {
-				let source = SignalProducer<Int, NoError>(values: [1, 2, 3])
+				let source = SignalProducer<Int, NoError>([1, 2, 3])
 				let producer = source.animateFollowingFirst()
 
 				let result = producer.collect().last()
@@ -44,15 +44,15 @@ class RACExtensionsSpec: QuickSpec {
 				signal
 					.withInitialValue(1)
 					.collect()
-					.startWithNext { values in
+					.startWithValues { values in
 						expect(values[0]) == 1
 						expect(values[1]) == 2
 						expect(values[2]) == 3
 						tested = true
 					}
 
-				observer.sendNext(2)
-				observer.sendNext(3)
+				observer.send(value: 2)
+				observer.send(value: 3)
 				observer.sendCompleted()
 				
 				expect(tested) == true
