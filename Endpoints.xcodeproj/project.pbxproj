@@ -59,8 +59,6 @@
 		AAE2816C1BB8BCAE0080E8B7 /* Signal+Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA79FD21B35C5D900628BD2 /* Signal+Endpoints.swift */; };
 		AAF8992B1EC662830049CC74 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992A1EC6627C0049CC74 /* ReactiveSwift.framework */; };
 		AAF8992D1EC662930049CC74 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992C1EC662930049CC74 /* ReactiveSwift.framework */; };
-		AAF899311ECA4CCD0049CC74 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992F1ECA4CCD0049CC74 /* Nimble.framework */; };
-		AAF899321ECA4CCD0049CC74 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF899301ECA4CCD0049CC74 /* Quick.framework */; };
 		AAF899331ECA4CD40049CC74 /* Nimble.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992F1ECA4CCD0049CC74 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AAF899341ECA4CD40049CC74 /* Quick.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = AAF899301ECA4CCD0049CC74 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AAF899351ECA4CE50049CC74 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF8992F1ECA4CCD0049CC74 /* Nimble.framework */; };
@@ -148,8 +146,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAF899321ECA4CCD0049CC74 /* Quick.framework in Frameworks */,
-				AAF899311ECA4CCD0049CC74 /* Nimble.framework in Frameworks */,
 				AA848CE01D5E0B7F00AC6FBB /* Result.framework in Frameworks */,
 				AAF8992D1EC662930049CC74 /* ReactiveSwift.framework in Frameworks */,
 			);
