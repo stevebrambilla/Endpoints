@@ -13,6 +13,7 @@ import Result
 extension SignalProtocol where Error == NoError {
 	/// Binds the signal to `endpoint` and returns a Disposable that can be used
  	/// to cancel the binding.
+	@discardableResult
 	public func bind(to endpoint: Endpoint<Value>) -> Disposable {
 		return endpoint.bind(from: signal)
 	}
@@ -21,6 +22,7 @@ extension SignalProtocol where Error == NoError {
 	/// to cancel the binding.
 	///
 	/// This overload maps a non-optional signal to an optional endpoint.
+	@discardableResult
 	public func bind(to endpoint: Endpoint<Value?>) -> Disposable {
 		let optionalSignal = signal.map(Optional.init)
 		return endpoint.bind(from: optionalSignal)
@@ -30,6 +32,7 @@ extension SignalProtocol where Error == NoError {
 extension SignalProducerProtocol where Error == NoError {
 	/// Binds the signal producer to `endpoint` and returns a Disposable that
 	/// can be used to cancel the binding.
+	@discardableResult
 	public func bind(to endpoint: Endpoint<Value>) -> Disposable {
 		return endpoint.bind(from: producer)
 	}
@@ -38,6 +41,7 @@ extension SignalProducerProtocol where Error == NoError {
 	/// can be used to cancel the binding.
 	///
 	/// This overload maps a non-optional producer to an optional endpoint.
+	@discardableResult
 	public func bind(to endpoint: Endpoint<Value?>) -> Disposable {
 		let optionalProducer = producer.map(Optional.init)
 		return endpoint.bind(from: optionalProducer)
@@ -47,6 +51,7 @@ extension SignalProducerProtocol where Error == NoError {
 extension PropertyProtocol {
 	/// Binds the property to `endpoint` and returns a Disposable that
 	/// can be used to cancel the binding.
+	@discardableResult
 	public func bind(to endpoint: Endpoint<Value>) -> Disposable {
 		return producer.bind(to: endpoint)
 	}
@@ -55,6 +60,7 @@ extension PropertyProtocol {
 	/// can be used to cancel the binding.
 	///
 	/// This overload binds a non-optional property to an optional endpoint.
+	@discardableResult
 	public func bind(to endpoint: Endpoint<Value?>) -> Disposable {
 		return producer.bind(to: endpoint)
 	}

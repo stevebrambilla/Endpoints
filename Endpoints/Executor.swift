@@ -78,6 +78,7 @@ public struct Executor<Payload> {
 	/// input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
+	@discardableResult
 	public func bind<Output, Error>(to action: Action<Payload, Output, Error>) -> Disposable {
 		return bind(to: action, transform: { $0 })
 	}
@@ -87,6 +88,7 @@ public struct Executor<Payload> {
 	/// by applying `transform` before being used as the input to the Action.
 	///
 	/// Returns a Disposable that can be used to cancel the binding.
+	@discardableResult
 	public func bind<Input, Output, Error>(to action: Action<Input, Output, Error>, transform: @escaping (Payload) -> Input) -> Disposable {
 		let disposable = CompositeDisposable()
 

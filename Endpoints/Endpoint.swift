@@ -63,6 +63,7 @@ public struct Endpoint<Value> {
 
 	/// Binds `signal` to the endpoint and returns the Disposable that can be
 	/// used to cancel the binding.
+	@discardableResult
 	public func bind(from signal: Signal<Value, NoError>) -> Disposable {
 		// Create a signal producer from the signal and bind to it.
 		let producer = SignalProducer { observer, disposable in
@@ -106,12 +107,14 @@ private enum EndpointError: Error {
 
 /// Binds `producer` to `endpoint` and returns a Disposable that can be used
 /// to cancel the binding.
+@discardableResult
 public func <~ <T>(endpoint: Endpoint<T>, producer: SignalProducer<T, NoError>) -> Disposable {
 	return endpoint.bind(from: producer)
 }
 
 /// Binds `property` to `endpoint` and returns a Disposable that can be used
 /// to cancel the binding.
+@discardableResult
 public func <~ <T, P: PropertyProtocol>(endpoint: Endpoint<T>, property: P) -> Disposable where P.Value == T {
 	return endpoint.bind(from: property.producer)
 }
