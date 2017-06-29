@@ -23,7 +23,7 @@ extension UIBarButtonItem {
 	///
 	/// This will reset the item's `target` and `action`.
 	public var triggerProducer: SignalProducer<UIBarButtonItem, NoError> {
-		let sourceEvents = SignalProducer<AnyObject, NoError> { observer, disposable in
+		let sourceEvents = SignalProducer<AnyObject, NoError> { observer, lifetime in
 			let target = ObjCTarget() { sender in
 				observer.send(value: sender)
 			}
@@ -31,7 +31,7 @@ extension UIBarButtonItem {
 			self.target = target
 			self.action = target.selector
 
-			disposable.add {
+			lifetime.observeEnded {
 				target.dispose() // Strongly retains `target`
 				self.target = nil
 				self.action = nil

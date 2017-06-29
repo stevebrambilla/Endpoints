@@ -44,14 +44,14 @@ extension UIControl {
 	/// `SignalProducer`. This producer will not terminate naturally, so it must
 	/// be disposed or interrupted to avoid leaks.
 	public func controlEventsProducer(for events: UIControlEvents) -> SignalProducer<AnyObject, NoError> {
-		return SignalProducer { observer, disposable in
+		return SignalProducer { observer, lifetime in
 			let target = ObjCTarget() { sender in
 				observer.send(value: sender)
 			}
 
 			self.addTarget(target, action: target.selector, for: events)
 
-			disposable.add {
+			lifetime.observeEnded {
 				self.removeTarget(target, action: target.selector, for: events)
 			}
 		}

@@ -22,12 +22,12 @@ extension NotificationCenter {
 	/// `SignalProducer`. This producer will not terminate naturally, so it must
 	/// be disposed of or interrupted to avoid leaks.
 	public func notificationsProducer(forName name: Notification.Name, object: AnyObject? = nil) -> SignalProducer<Notification, NoError> {
-		return SignalProducer { observer, disposable in
+		return SignalProducer { observer, lifetime in
 			let notificationObserver = self.addObserver(forName: name, object: object, queue: nil) { notification in
 				observer.send(value: notification)
 			}
 
-			disposable.add {
+			lifetime.observeEnded {
 				self.removeObserver(notificationObserver)
 			}
 		}

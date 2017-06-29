@@ -32,7 +32,7 @@ extension UIGestureRecognizer {
 	/// `SignalProducer`. This producer will not terminate naturally, so it must
 	/// be disposed or interrupted to avoid leaks.
 	public var gestureEventsProducer: SignalProducer<UIGestureRecognizer, NoError> {
-		return SignalProducer { observer, disposable in
+		return SignalProducer { observer, lifetime in
 			let target = ObjCTarget() { target in
 				guard let gestureRecognizer = target as? UIGestureRecognizer else { return }
 				observer.send(value: gestureRecognizer)
@@ -40,7 +40,7 @@ extension UIGestureRecognizer {
 
 			self.addTarget(target, action: target.selector)
 
-			disposable.add {
+			lifetime.observeEnded {
 				self.removeTarget(target, action: target.selector)
 			}
 		}

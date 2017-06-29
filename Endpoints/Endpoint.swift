@@ -66,8 +66,9 @@ public struct Endpoint<Value> {
 	@discardableResult
 	public func bind(from signal: Signal<Value, NoError>) -> Disposable {
 		// Create a signal producer from the signal and bind to it.
-		let producer = SignalProducer { observer, disposable in
-			disposable += signal.observe(observer)
+		let producer = SignalProducer<Value, NoError> { observer, lifetime in
+			let disposable = signal.observe(observer)
+			lifetime.observeEnded { disposable?.dispose() }
 		}
 
 		return bind(from: producer)
@@ -78,7 +79,7 @@ public struct Endpoint<Value> {
 	@discardableResult
 	public func bind(from producer: SignalProducer<Value, NoError>) -> Disposable {
 		return producer
-			.promoteErrors(EndpointError.self)
+			.promoteError(EndpointError.self)
 
 			// Create a Setter with the strongly captured target.
 			// If an error occurs (eg. target was zero'd), then the binding terminates.

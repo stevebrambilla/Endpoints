@@ -53,11 +53,11 @@ class EndpointSpec: QuickSpec {
 			}
 
 			it("should dispose when target is zeroed out") {
-				let addedDisposable = SimpleDisposable()
+				let addedDisposable = AnyDisposable()
 				var signalObserver: Signal<String, NoError>.Observer!
 
 				let producer = SignalProducer<String, NoError>() { observer, disposable in
-					disposable.add(addedDisposable)
+					disposable.observeEnded { addedDisposable.dispose() }
 					signalObserver = observer
 				}
 
